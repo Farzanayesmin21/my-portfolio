@@ -1,0 +1,1581 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Farzana Yesmin</title>
+<link rel="icon" type="image/png" href="image/logo.png">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<script>
+tailwind.config = {
+  theme: {
+    extend: {
+      fontFamily: {
+        grotesk: ["'Space Grotesk'", 'sans-serif'],
+        mono: ["'JetBrains Mono'", 'monospace'],
+      },
+      colors: {
+        purple: {
+          400: '#c084fc',
+          500: '#a855f7',
+          600: '#9333ea',
+          700: '#7c3aed',
+        }
+      }
+    }
+  }
+}
+</script>
+<style>
+/* ============================================
+   THEME VARIABLES (kept — Tailwind can't replace CSS vars used in JS)
+============================================ */
+:root {
+  --p: #a855f7;
+  --p2: #9333ea;
+  --p3: #7c3aed;
+  --p4: #c084fc;
+  --transition: all 0.4s cubic-bezier(0.4,0,0.2,1);
+}
+[data-theme="dark"] {
+  --bg: #06030f;
+  --bg2: #0c0618;
+  --bg3: #100820;
+  --card: rgba(12,6,24,0.75);
+  --border: rgba(147,51,234,0.15);
+  --border-hover: rgba(147,51,234,0.45);
+  --text: #e2d9f3;
+  --text2: #c4b5d9;
+  --muted: #7c6e99;
+  --nav-bg: rgba(6,3,15,0.75);
+  --nav-bg-scroll: rgba(6,3,15,0.95);
+  --grid-color: rgba(147,51,234,0.06);
+  --shadow: rgba(147,51,234,0.2);
+  --img-ring: rgba(168,85,247,0.5);
+}
+[data-theme="light"] {
+  --bg: #f8f5ff;
+  --bg2: #f0eaff;
+  --bg3: #ede4ff;
+  --card: rgba(255,255,255,0.85);
+  --border: rgba(147,51,234,0.2);
+  --border-hover: rgba(147,51,234,0.6);
+  --text: #1a0a2e;
+  --text2: #3d1f6b;
+  --muted: #6b4fa0;
+  --nav-bg: rgba(248,245,255,0.8);
+  --nav-bg-scroll: rgba(248,245,255,0.97);
+  --grid-color: rgba(147,51,234,0.07);
+  --shadow: rgba(147,51,234,0.15);
+  --img-ring: rgba(147,51,234,0.5);
+}
+
+/* ============================================
+   BASE
+============================================ */
+* { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'Space Grotesk', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  overflow-x: hidden;
+  cursor: none;
+  transition: background 0.4s, color 0.4s;
+}
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--p3); border-radius: 4px; }
+::selection { background: rgba(168,85,247,0.3); color: var(--text); }
+
+/* ============================================
+   CURSOR
+============================================ */
+#cursor {
+  position:fixed; width:10px; height:10px;
+  background: var(--p);
+  border-radius:50%; pointer-events:none; z-index:9999;
+  transform:translate(-50%,-50%);
+  transition: width 0.2s, height 0.2s, background 0.2s;
+  box-shadow: 0 0 12px 3px rgba(168,85,247,0.5);
+}
+#cursor-ring {
+  position:fixed; width:34px; height:34px;
+  border: 1.5px solid rgba(168,85,247,0.45);
+  border-radius:50%; pointer-events:none; z-index:9998;
+  transform:translate(-50%,-50%);
+  transition: width 0.25s, height 0.25s, border-color 0.25s;
+}
+#mouse-aura {
+  position:fixed; width:480px; height:480px;
+  background: radial-gradient(circle, rgba(147,51,234,0.08) 0%, transparent 70%);
+  border-radius:50%; pointer-events:none; z-index:0;
+  transform:translate(-50%,-50%);
+}
+.cursor-grow #cursor { width:18px; height:18px; background:transparent; border:2px solid var(--p); box-shadow:0 0 18px 5px rgba(168,85,247,0.4); }
+.cursor-grow #cursor-ring { width:50px; height:50px; border-color:rgba(168,85,247,0.8); }
+
+/* ============================================
+   MISC HELPERS — things Tailwind can't express inline
+============================================ */
+/* Glow divider */
+.glow-divider { height:1px; background:linear-gradient(90deg,transparent,rgba(147,51,234,0.35),transparent); margin:0 3rem; }
+@media(max-width:768px){ .glow-divider { margin:0 1.4rem; } }
+
+/* Gradient text */
+.grad-text { background:linear-gradient(135deg,#a855f7 0%,#7c3aed 45%,#c084fc 100%); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+
+/* Animated badge pulse */
+.badge-pulse { width:6px; height:6px; background:#4ade80; border-radius:50%; box-shadow:0 0 6px #4ade80; animation:pulseDot 2s infinite; }
+@keyframes pulseDot { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.4;transform:scale(0.8)} }
+
+/* Typing cursor blink */
+.cursor-blink { display:inline-block; width:2px; height:1.1em; background:var(--p); animation:blink 1s infinite; vertical-align:text-bottom; margin-left:2px; }
+@keyframes blink { 0%,50%{opacity:1} 51%,100%{opacity:0} }
+
+/* Float badge animation */
+@keyframes floatBadge { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-6px)} }
+@keyframes aboutFadeIn { from{opacity:0;transform:translateY(14px)} to{opacity:1;transform:translateY(0)} }
+.ib1 { top:-16px; right:-20px; animation:floatBadge 3s ease-in-out infinite; }
+.ib2 { bottom:-16px; left:-20px; animation:floatBadge 3.5s ease-in-out infinite 0.5s; }
+.ib3 { bottom:60px; right:-24px; animation:floatBadge 2.8s ease-in-out infinite 1s; }
+.about-float-card2 { animation:floatBadge 3s ease-in-out infinite; }
+
+/* Parallax orbs */
+.orb { position:absolute; border-radius:50%; pointer-events:none; filter:blur(80px); }
+.orb1 { width:480px; height:480px; top:-80px; right:5%; background:rgba(147,51,234,0.15); }
+.orb2 { width:320px; height:320px; bottom:80px; left:-60px; background:rgba(109,40,217,0.1); }
+
+/* Hero bg grid */
+.hero-bg-grid {
+  position:absolute; inset:0;
+  background-image:linear-gradient(var(--grid-color) 1px,transparent 1px),
+                   linear-gradient(90deg,var(--grid-color) 1px,transparent 1px);
+  background-size:60px 60px;
+  mask-image:radial-gradient(ellipse 80% 70% at 50% 40%,black 20%,transparent 100%);
+}
+
+/* Social float line */
+.social-float::after { content:''; display:block; width:1px; height:70px; background:linear-gradient(180deg,rgba(147,51,234,0.5),transparent); margin-top:0.4rem; }
+.scroll-line::before { content:''; display:block; width:1px; height:70px; background:linear-gradient(180deg,rgba(147,51,234,0.5),transparent); }
+
+/* Section label line */
+.section-label::before { content:''; display:block; width:22px; height:1px; background:var(--p); }
+
+/* Skill bar */
+.skill-fill { height:100%; background:linear-gradient(90deg,var(--p3),var(--p)); border-radius:3px; width:0; transition:width 1.4s cubic-bezier(0.4,0,0.2,1); }
+
+/* Skill card top line */
+.skill-cat-card::before {
+  content:''; position:absolute; top:0; left:0; right:0; height:2px;
+  background:linear-gradient(90deg,transparent,var(--p),transparent);
+  transform:scaleX(0); transition:transform 0.4s;
+}
+.skill-cat-card:hover::before { transform:scaleX(1); }
+
+/* Project thumb scale */
+.pt-bg { position:absolute; inset:0; transition:transform 0.5s; }
+.project-card:hover .pt-bg { transform:scale(1.06); }
+.pt1 { background:linear-gradient(135deg,#1a0533,#2d0a5e,#160440); }
+.pt2 { background:linear-gradient(135deg,#061530,#0c2a5c,#061030); }
+.pt3 { background:linear-gradient(135deg,#0a201a,#0d4530,#082015); }
+.pt4 { background:linear-gradient(135deg,#2a0f06,#50200d,#2a0a06); }
+.pt5 { background:linear-gradient(135deg,#1a1a06,#3c3c0d,#151506); }
+.pt6 { background:linear-gradient(135deg,#06111a,#0d2535,#060e1a); }
+
+/* Project overlay show on hover */
+.project-overlay { position:absolute; inset:0; background:rgba(6,3,15,0.55); display:flex; align-items:center; justify-content:center; gap:0.7rem; opacity:0; transition:opacity 0.3s; z-index:3; }
+.project-card:hover .project-overlay { opacity:1; }
+
+/* Cert card left bar */
+.cert-card::before { content:''; position:absolute; top:0; left:0; bottom:0; width:3px; background:linear-gradient(180deg,var(--p2),var(--p3)); transform:scaleY(0); transition:transform 0.35s; border-radius:3px 0 0 3px; transform-origin:top; }
+.cert-card:hover::before { transform:scaleY(1); }
+
+/* Education card glow */
+.edu-card::after { content:''; position:absolute; top:-60%; right:-30%; width:200px; height:200px; background:radial-gradient(circle,rgba(147,51,234,0.06),transparent 70%); pointer-events:none; }
+
+/* About avatar overlay */
+.about-avatar::before { content:''; position:absolute; inset:0; background:radial-gradient(circle at 35% 35%,rgba(147,51,234,0.18),transparent 60%); }
+
+/* About cards hover */
+.about-main-card:hover, .about-mini-card:hover {
+  border-color: var(--border-hover);
+  box-shadow: 0 12px 32px rgba(147,51,234,0.18);
+}
+.about-mini-card { animation: aboutFadeIn 0.6s ease both; }
+
+/* Service card glow dot */
+.service-card::after { content:''; position:absolute; bottom:-60px; right:-60px; width:150px; height:150px; background:radial-gradient(circle,rgba(147,51,234,0.1),transparent 70%); border-radius:50%; transition:var(--transition); }
+.service-card:hover::after { bottom:-30px; right:-30px; }
+.service-card:hover .srv-icon-el { background:var(--p2); box-shadow:0 0 20px rgba(147,51,234,0.4); }
+
+/* Review card quote */
+.review-card::before { content:'\201C'; position:absolute; top:-0.5rem; right:1.5rem; font-size:6rem; color:rgba(147,51,234,0.12); font-family:Georgia,serif; line-height:1; }
+
+/* Timeline line */
+.timeline { position:relative; padding-left:2.8rem; }
+.timeline::before {
+  content:''; position:absolute; left:9px; top:0; bottom:0; width:1px;
+  background:linear-gradient(180deg,transparent,rgba(147,51,234,0.5) 10%,rgba(147,51,234,0.5) 90%,transparent);
+}
+@media(max-width:1024px){ .exp-sticky-col { position:static !important; top:auto !important; } }
+
+/* Nav base + scrolled */
+#navbar { border-radius: 20px; transition: var(--transition); }
+#navbar.scrolled {
+  top: 14px;
+  height:58px;
+  width: min(94%, 1180px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(12,6,24,0.35);
+  -webkit-backdrop-filter: blur(18px);
+  backdrop-filter: blur(18px);
+  border-color: var(--border);
+  box-shadow: 0 10px 35px rgba(0,0,0,0.25);
+}
+[data-theme="light"] #navbar.scrolled { background: rgba(255,255,255,0.35); }
+
+/* Mobile menu open */
+.mobile-menu { display:none; opacity:0; transform:translateY(-8px); transition:opacity 0.25s ease, transform 0.25s ease; }
+.mobile-menu.open { display:flex; opacity:1; transform:translateY(0); }
+@media(min-width:769px){ .mobile-menu{display:none !important;} }
+
+/* Hamburger -> X animation */
+.nav-hamburger.open span:nth-child(1){ transform:translateY(7px) rotate(45deg); }
+.nav-hamburger.open span:nth-child(2){ opacity:0; }
+.nav-hamburger.open span:nth-child(3){ transform:translateY(-7px) rotate(-45deg); }
+.nav-hamburger span{ transition:var(--transition); }
+
+/* Reveal animations */
+.reveal { opacity:0; transform:translateY(28px); transition:opacity 0.7s ease, transform 0.7s ease; }
+.reveal.visible { opacity:1; transform:none; }
+.reveal-left { opacity:0; transform:translateX(-28px); transition:opacity 0.7s ease, transform 0.7s ease; }
+.reveal-left.visible { opacity:1; transform:none; }
+.reveal-right { opacity:0; transform:translateX(28px); transition:opacity 0.7s ease, transform 0.7s ease; }
+.reveal-right.visible { opacity:1; transform:none; }
+.reveal-scale { opacity:0; transform:scale(0.92); transition:opacity 0.7s ease, transform 0.7s ease; }
+.reveal-scale.visible { opacity:1; transform:scale(1); }
+
+/* ============================================
+   RESPONSIVE — ALL DEVICES
+============================================ */
+
+/* Desktop nav hide hamburger */
+@media(min-width:769px){ .nav-hamburger { display:none !important; } }
+
+/* Tablet — 900px */
+@media(max-width:900px){
+  .social-float, .scroll-line { display:none; }
+  .hero-inner { grid-template-columns:1fr !important; }
+  #skillsSection { grid-template-columns: repeat(2,1fr) !important; }
+  .exp-sticky-col { position:static !important; top:auto !important; }
+}
+
+/* Tablet — 768px */
+@media(max-width:768px){
+  /* Nav */
+  nav { padding:0 1.2rem; height:60px; }
+  .nav-center, .nav-hire { display:none !important; }
+  .nav-hamburger { display:flex !important; }
+
+  /* Sections — global padding */
+  section { padding-left:1.2rem !important; padding-right:1.2rem !important; }
+  section > div { padding-left:0 !important; padding-right:0 !important; }
+
+  /* Hero */
+  #home { padding:5.5rem 1.2rem 3rem !important; }
+  .hero-inner { grid-template-columns:1fr !important; gap:2.5rem !important; text-align:center !important; }
+  .hero-inner .max-w-\[640px\] { max-width:100% !important; }
+  .hero-inner .flex.gap-10 { justify-content:center !important; }
+  .hero-img-outer { width:200px !important; height:250px !important; margin:0 auto !important; order:-1 !important; }
+  /* Center hero CTA buttons */
+  .hero-inner .flex.gap-\[0\.9rem\] { justify-content:center !important; flex-wrap:wrap !important; }
+  /* Stats */
+  .hero-inner .flex.gap-10.pt-9 { justify-content:center !important; gap:2rem !important; flex-wrap:wrap !important; }
+
+  /* About */
+  .about-grid { grid-template-columns:1fr !important; gap:2rem !important; }
+  /* About section inner grid */
+  .grid.grid-cols-1.lg\:grid-cols-\[1\.3fr_1fr\] { grid-template-columns:1fr !important; }
+
+  /* Skills */
+  #skillsSection { grid-template-columns:1fr !important; }
+
+  /* Projects grid */
+  .grid.gap-\[1\.6rem\] { grid-template-columns:1fr !important; }
+
+  /* Experience layout */
+  .grid.gap-16.lg\:grid-cols-\[340px_1fr\],
+  .grid.gap-14 { grid-template-columns:1fr !important; gap:2rem !important; }
+
+  /* Education */
+  .grid.mt-12.gap-\[1\.4rem\] { grid-template-columns:1fr !important; }
+
+  /* Reviews */
+  .review-card { width:calc(100vw - 2.8rem) !important; max-width:360px !important; }
+
+  /* Contact */
+  .contact-grid { grid-template-columns:1fr !important; gap:2.5rem !important; }
+
+  /* section px-12 overrides */
+  .px-12 { padding-left:1.2rem !important; padding-right:1.2rem !important; }
+  .px-6 { padding-left:1.2rem !important; padding-right:1.2rem !important; }
+  .py-\[6\.5rem\] { padding-top:4rem !important; padding-bottom:4rem !important; }
+  .py-\[4\.5rem\] { padding-top:3rem !important; padding-bottom:3rem !important; }
+}
+
+/* Mobile — 480px */
+@media(max-width:480px){
+  /* Form */
+  .form-row { grid-template-columns:1fr !important; }
+  h1 { text-align:center !important; }
+
+  /* Hero buttons stack */
+  .hero-inner .flex.gap-\[0\.9rem\] a,
+  .hero-inner .flex.gap-\[0\.9rem\] { width:100% !important; justify-content:center !important; }
+
+  /* Cert grid */
+  .grid.grid-cols-2 { grid-template-columns:1fr !important; }
+
+  /* Reviews */
+  .review-card { width:calc(100vw - 2.4rem) !important; }
+
+  /* Nav brand shrink */
+  .font-mono.text-\[1\.05rem\] { font-size:0.9rem !important; }
+
+  /* Floating badges hide on tiny screens */
+  .img-badge { display:none !important; }
+
+  /* About mini cards stack better */
+  .about-mini-card { padding:1.2rem !important; }
+}
+
+/* Mobile — 380px (small phones) */
+@media(max-width:380px){
+  #home { padding:5rem 1rem 2.5rem !important; }
+  section { padding-left:1rem !important; padding-right:1rem !important; }
+  .hero-img-outer { width:170px !important; height:210px !important; }
+}
+
+/* Light theme overrides */
+[data-theme="light"] .hero-bg-grid { opacity:0.6; }
+[data-theme="light"] .orb1 { background:rgba(147,51,234,0.08); }
+[data-theme="light"] .orb2 { background:rgba(109,40,217,0.06); }
+[data-theme="light"] #mouse-aura { background:radial-gradient(circle,rgba(147,51,234,0.05) 0%,transparent 70%); }
+[data-theme="light"] .review-card::before { color:rgba(147,51,234,0.08); }
+[data-theme="light"] .hero-img { background:linear-gradient(135deg,rgba(147,51,234,0.18),rgba(109,40,217,0.08)); }
+
+/* Light mode text fixes */
+[data-theme="light"] .about-main-card h3,
+[data-theme="light"] .about-main-card h4,
+[data-theme="light"] .about-mini-card h4 { color: var(--text); }
+[data-theme="light"] .pt1,
+[data-theme="light"] .pt2,
+[data-theme="light"] .pt3,
+[data-theme="light"] .pt4,
+[data-theme="light"] .pt5,
+[data-theme="light"] .pt6 { opacity: 0.85; }
+[data-theme="light"] .project-overlay { background: rgba(255,255,255,0.55); }
+
+/* ============================================
+   CV DOWNLOAD BUTTON ANIMATION
+============================================ */
+.cv-download-btn {
+  position: relative;
+  overflow: hidden;
+}
+.cv-download-btn .cv-btn-progress {
+  position: absolute;
+  bottom: 0; left: 0;
+  height: 2px;
+  width: 0%;
+  background: linear-gradient(90deg, var(--p3), var(--p));
+  transition: none;
+  border-radius: 0 0 8px 8px;
+}
+.cv-download-btn:hover {
+  border-color: var(--p) !important;
+  color: var(--p) !important;
+  box-shadow: 0 0 18px rgba(147,51,234,0.2);
+}
+.cv-download-btn:hover .cv-btn-icon i {
+  animation: downloadBounce 0.6s ease infinite alternate;
+}
+@keyframes downloadBounce {
+  from { transform: translateY(0); }
+  to   { transform: translateY(3px); }
+}
+.cv-download-btn.downloading .cv-btn-text::after {
+  content: '...';
+  animation: dots 1s steps(3, end) infinite;
+}
+@keyframes dots {
+  0%   { content: '.'; }
+  33%  { content: '..'; }
+  66%  { content: '...'; }
+  100% { content: ''; }
+}
+.cv-download-btn.downloading .cv-btn-progress {
+  animation: progressFill 1.8s ease forwards;
+}
+@keyframes progressFill {
+  0%   { width: 0%; }
+  60%  { width: 80%; }
+  100% { width: 100%; }
+}
+</style>
+</head>
+<body class="font-grotesk">
+
+<!-- CURSOR -->
+<div id="cursor"></div>
+<div id="cursor-ring"></div>
+<div id="mouse-aura"></div>
+
+<!-- SOCIAL FLOAT -->
+<div class="social-float fixed left-[1.4rem] bottom-10 z-50 flex flex-col items-center gap-[0.9rem]">
+  <a href="https://github.com/Farzanayesmin21" title="GitHub" class="w-[34px] h-[34px] rounded-full border flex items-center justify-content-center text-[0.85rem] no-underline transition-all duration-300 hover:-translate-y-0.5" style="border-color:var(--border);background:var(--bg3);color:var(--muted);display:flex;align-items:center;justify-content:center;">GH</a>
+  <a href="https://www.linkedin.com/in/farzanayesmin21/" title="LinkedIn" class="w-[34px] h-[34px] rounded-full border flex items-center justify-center text-[0.85rem] no-underline transition-all duration-300 hover:-translate-y-0.5" style="border-color:var(--border);background:var(--bg3);color:var(--muted);">LI</a>
+</div>
+<div class="scroll-line fixed right-[1.4rem] bottom-10 z-50 flex flex-col items-center gap-2">
+  <span class="font-mono text-[0.6rem] [writing-mode:vertical-rl] tracking-[0.15em]" style="color:var(--muted)">scroll</span>
+</div>
+
+<!-- NAVBAR -->
+<nav id="navbar" class="fixed top-0 left-0 right-0 z-[200] px-10 h-[70px] flex items-center justify-between backdrop-blur-2xl border transition-all duration-300" style="background:var(--nav-bg);border-color:transparent;border-radius:0;">
+  <a href="#home" class="font-mono text-[1.05rem] font-semibold no-underline flex items-center gap-[0.4rem] tracking-[0.05em]" style="color:var(--p);">
+    <span style="color:var(--muted);font-weight:300">&lt;</span>Farzana.dev<span style="color:var(--muted);font-weight:300">/&gt;</span>
+  </a>
+  <div class="nav-center flex items-center rounded-full p-[0.3rem_0.4rem] gap-[0.1rem] border" style="background:var(--bg3);border-color:var(--border);">
+    <a href="#about" class="nav-link px-[1.1rem] py-[0.4rem] rounded-full text-[0.78rem] font-medium tracking-[0.04em] no-underline transition-all duration-300" style="color:var(--muted);">About</a>
+    <a href="#skills" class="nav-link px-[1.1rem] py-[0.4rem] rounded-full text-[0.78rem] font-medium tracking-[0.04em] no-underline transition-all duration-300" style="color:var(--muted);">Skills</a>
+    <a href="#projects" class="nav-link px-[1.1rem] py-[0.4rem] rounded-full text-[0.78rem] font-medium tracking-[0.04em] no-underline transition-all duration-300" style="color:var(--muted);">Projects</a>
+    <a href="#experience" class="nav-link px-[1.1rem] py-[0.4rem] rounded-full text-[0.78rem] font-medium tracking-[0.04em] no-underline transition-all duration-300" style="color:var(--muted);">Experience</a>
+    <a href="#reviews" class="nav-link px-[1.1rem] py-[0.4rem] rounded-full text-[0.78rem] font-medium tracking-[0.04em] no-underline transition-all duration-300" style="color:var(--muted);">Reviews</a>
+    <a href="#contact" class="nav-link px-[1.1rem] py-[0.4rem] rounded-full text-[0.78rem] font-medium tracking-[0.04em] no-underline transition-all duration-300" style="color:var(--muted);">Contact</a>
+  </div>
+  <div class="flex items-center gap-4">
+    <button id="themeToggle" class="theme-btn w-[38px] h-[38px] rounded-full border flex items-center justify-center text-[1rem] transition-all duration-300" style="border-color:var(--border);background:var(--bg3);cursor:none;" title="Toggle theme">🌙</button>
+    <a href="https://wa.me/8801755163729" target="_blank" class="nav-hire px-[1.3rem] py-2 rounded-full text-[0.8rem] font-semibold text-white no-underline transition-all duration-300 shadow-lg" style="background:linear-gradient(135deg,var(--p2),var(--p3));box-shadow:0 0 20px rgba(147,51,234,0.3);"><i class="fa-brands fa-whatsapp"></i>  Hire Me</a>
+    <button class="nav-hamburger flex-col gap-[5px] p-1" id="hamburger" style="cursor:none;display:none;" title="Menu">
+      <span class="block w-[22px] h-[2px] rounded-sm transition-all duration-300" style="background:var(--muted);"></span>
+      <span class="block w-[22px] h-[2px] rounded-sm transition-all duration-300" style="background:var(--muted);"></span>
+      <span class="block w-[22px] h-[2px] rounded-sm transition-all duration-300" style="background:var(--muted);"></span>
+    </button>
+  </div>
+</nav>
+<div class="mobile-menu fixed top-[70px] left-0 right-0 z-[190] border-b flex-col gap-2 px-8 py-5 backdrop-blur-2xl" id="mobileMenu" style="background:var(--nav-bg-scroll);border-color:var(--border);">
+  <a href="#about" class="py-3 no-underline text-[0.9rem] border-b block" style="color:var(--muted);border-color:var(--border);">About</a>
+  <a href="#skills" class="py-3 no-underline text-[0.9rem] border-b block" style="color:var(--muted);border-color:var(--border);">Skills</a>
+  <a href="#projects" class="py-3 no-underline text-[0.9rem] border-b block" style="color:var(--muted);border-color:var(--border);">Projects</a>
+  <a href="#experience" class="py-3 no-underline text-[0.9rem] border-b block" style="color:var(--muted);border-color:var(--border);">Experience</a>
+  <a href="#reviews" class="py-3 no-underline text-[0.9rem] border-b block" style="color:var(--muted);border-color:var(--border);">Reviews</a>
+  <a href="#contact" class="py-3 no-underline text-[0.9rem] block" style="color:var(--muted);">Contact</a>
+</div>
+
+<!-- ==========================================
+     HERO SECTION
+========================================== -->
+<section id="home" class="relative min-h-screen flex items-center overflow-hidden" style="padding:0 3rem 4rem;padding-top:21px;">
+  <div class="hero-bg-grid"></div>
+  <div class="orb orb1"></div>
+  <div class="orb orb2"></div>
+  <div class="hero-inner section-wrap grid gap-16 items-center w-full relative z-[2]" style="grid-template-columns:1fr auto;padding-top:7rem;padding-bottom:4rem;max-width:1200px;margin:0 auto;">
+
+    <!-- LEFT: Content -->
+    <div class="max-w-[640px]">
+      <div class="flex items-center gap-3 mb-6 flex-wrap reveal">
+        <div class="inline-flex items-center gap-[0.45rem] rounded-full px-[0.85rem] py-[0.28rem] border font-mono text-[0.7rem] tracking-[0.1em]" style="background:rgba(147,51,234,0.1);border-color:rgba(147,51,234,0.28);color:var(--p);">
+          <span class="badge-pulse"></span>
+          Available for Work
+        </div>
+        <div class="rounded-full px-[0.85rem] py-[0.28rem] text-[0.7rem] font-mono" style="background:rgba(168,85,247,0.12);border:1px solid rgba(168,85,247,0.25);color:var(--p4);">3+ Years Experience</div>
+      </div>
+
+      <h1 class="text-[clamp(2.5rem,5.5vw,4.5rem)] font-bold leading-[1.08] tracking-[-0.03em] mb-5 reveal" style="transition-delay:0.08s;color:var(--text);">
+        Hi, I'm <span class="grad-text">Farzana Yesmin</span><br>
+        Frontend Developer
+      </h1>
+
+      <div class="text-[1.1rem] font-semibold mb-5 min-h-[1.6rem] font-mono reveal" style="color:var(--p4);transition-delay:0.14s;">
+        <span id="typing-text"></span><span class="cursor-blink"></span>
+      </div>
+
+      <p class="text-[0.97rem] leading-[1.75] max-w-[500px] mb-9 reveal" style="color:var(--muted);transition-delay:0.2s;">
+        I create clean, interactive, and high-performance websites using React, JavaScript, HTML, CSS, and Tailwind CSS. Passionate about writing maintainable code, solving real-world problems, and delivering seamless user experiences.
+      </p>
+
+      <div class="flex gap-[0.9rem] flex-wrap mb-11 reveal" style="transition-delay:0.26s;">
+        <a href="#projects" class="px-[1.9rem] py-[0.8rem] rounded-lg text-[0.9rem] font-semibold text-white no-underline inline-flex items-center gap-2 transition-all duration-300 hover:-translate-y-0.5" style="background:linear-gradient(135deg,var(--p2),var(--p3));box-shadow:0 0 28px rgba(147,51,234,0.32);cursor:none;"><i class="fa-solid fa-laptop-code"></i> View My Work →</a>
+        <a href="./Farzana-cv.pdf"
+   download="Farzana_Yesmin_CV.pdf"
+   class="px-[1.9rem] py-[0.8rem] rounded-lg text-[0.9rem] font-medium no-underline inline-flex items-center gap-2 border transition-all duration-300 hover:-translate-y-0.5"
+   style="background:transparent;color:var(--text);border-color:var(--border);cursor:none;">
+    <i class="fa-solid fa-download"></i>
+    Download CV
+</a>
+        <a href="#contact" class="px-[1.9rem] py-[0.8rem] rounded-lg text-[0.9rem] font-medium no-underline inline-flex items-center gap-2 border transition-all duration-300 hover:-translate-y-0.5" style="background:transparent;color:var(--text);border-color:var(--border);cursor:none;"><i class="fa-solid fa-comments"></i> Let's Talk</a>
+      </div>
+
+      <div class="flex gap-10 pt-9 border-t reveal" style="border-color:var(--border);transition-delay:0.32s;">
+        <div>
+          <div class="text-[1.9rem] font-bold leading-none" style="color:var(--p);" data-count="30"><span class="count-val">0</span><span class="text-[1.2rem]" style="color:var(--p4);">+</span></div>
+          <div class="text-[0.72rem] tracking-[0.04em] mt-1" style="color:var(--muted);">Projects Delivered</div>
+        </div>
+        <div>
+          <div class="text-[1.9rem] font-bold leading-none" style="color:var(--p);" data-count="15"><span class="count-val">0</span><span class="text-[1.2rem]" style="color:var(--p4);">+</span></div>
+          <div class="text-[0.72rem] tracking-[0.04em] mt-1" style="color:var(--muted);">Happy Clients</div>
+        </div>
+        <div>
+          <div class="text-[1.9rem] font-bold leading-none" style="color:var(--p);" data-count="3"><span class="count-val">0</span><span class="text-[1.2rem]" style="color:var(--p4);">+</span></div>
+          <div class="text-[0.72rem] tracking-[0.04em] mt-1" style="color:var(--muted);">Years Experience</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT: Image with animated badges -->
+    <div class="flex-shrink-0 reveal-scale relative" style="transition-delay:0.18s;">
+      <div class="hero-img-outer relative" style="width:300px;height:370px;">
+         <div
+      class="relative w-full h-full rounded-[22px] overflow-hidden border"
+      style="border-color:var(--border); background:linear-gradient(135deg,rgba(147,51,234,0.25),rgba(109,40,217,0.12));"
+    >
+
+      <!-- Glow -->
+      <div
+        class="absolute inset-0 z-10 pointer-events-none"
+        style="background:radial-gradient(circle at 40% 30%,rgba(147,51,234,0.18),transparent 65%);"
+      ></div>
+
+      <!-- Image -->
+      <img
+        src="image/mypic.png"
+        alt="Farzana Yesmin"
+        class="w-full h-full object-cover"
+      >
+    </div>
+
+        <!-- Floating animated badges -->
+        <div class="img-badge ib1 absolute z-10 rounded-xl px-[0.85rem] py-[0.55rem] backdrop-blur-md flex items-center gap-2 whitespace-nowrap border" style="background:var(--bg2);border-color:var(--border);box-shadow:0 8px 30px rgba(147,51,234,0.2);">
+          <span class="text-[1.1rem]">💻</span>
+          <div>
+            <div class="text-[0.72rem] font-semibold" style="color:var(--text);">Developer</div>
+            <div class="text-[0.62rem]" style="color:var(--muted);">Frontend Dev</div>
+          </div>
+        </div>
+        <div class="img-badge ib2 absolute z-10 rounded-xl px-[0.85rem] py-[0.55rem] backdrop-blur-md flex items-center gap-2 whitespace-nowrap border" style="background:var(--bg2);border-color:var(--border);box-shadow:0 8px 30px rgba(147,51,234,0.2);">
+          <span class="text-[1.1rem]">✅</span>
+          <div>
+            <div class="text-[0.72rem] font-semibold" style="color:var(--text);">30+ Projects</div>
+            <div class="text-[0.62rem]" style="color:var(--muted);">Completed</div>
+          </div>
+        </div>
+        <div class="img-badge ib3 absolute z-10 rounded-xl px-[0.85rem] py-[0.55rem] backdrop-blur-md flex items-center gap-2 whitespace-nowrap border" style="background:var(--bg2);border-color:var(--border);box-shadow:0 8px 30px rgba(147,51,234,0.2);">
+          <span class="text-[1.1rem]">🌟</span>
+          <div>
+            <div class="text-[0.72rem] font-semibold" style="color:var(--text);">5.0 Rating</div>
+            <div class="text-[0.62rem]" style="color:var(--muted);">Avg. Review</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<div class="glow-divider"></div>
+
+<!-- ==========================================
+     ABOUT SECTION
+========================================== -->
+<section id="about" class="relative z-[1] overflow-hidden" style="background:linear-gradient(180deg,var(--bg) 0%,var(--bg2) 100%);">
+  <div class="px-6 md:px-12 py-[4.5rem] max-w-[1200px] mx-auto">
+    <div class="reveal-right">
+      
+      <div class="section-label font-mono text-[0.68rem] tracking-[0.22em] uppercase mb-4 flex items-center gap-3" style="color:var(--p);">
+        <span class="w-4 h-[1px]" style="background:var(-p);"></span> Who I Am
+      </div>
+      <h2 class="text-[clamp(2.2rem,5vw,3.8rem)] font-extrabold leading-[1.1] tracking-[-0.03em] mb-10" style="color:var(--text);">
+        Passionate about<br>Frontend Development.
+      </h2>
+
+      
+
+      <div class="grid grid-cols-1 lg:grid-cols-[1.3fr_1fr] gap-8 items-stretch">
+        
+        <div class="about-main-card rounded-[20px] p-[2.2rem] border flex flex-col gap-5 transition-all duration-300" style="background:var(--card); border-color:var(--border);">
+          <div class="about-text">
+            <p class="leading-[1.8] mb-4 text-[0.93rem]" style="color:var(--muted);">
+             I'm a passionate Frontend Developer from Bangladesh and a Diploma in Computer Science & Technology (CST) student. I completed the Complete Web Development course at Programming Hero, a MERN Stack Development Internship at BD Calling, and WordPress & Frontend Development training at TrustDevs. Currently, I'm working as a Web Developer at RadianTech, where I build responsive, user-friendly web applications while continuously improving my skills through real-world projects.
+            </p>
+           
+          </div>
+
+          <ul class="flex flex-col gap-[0.65rem] my-2 p-0">
+            <li class="flex items-start gap-3 text-[0.88rem] list-none" style="color:var(--text2);">
+              <span class="text-[0.6rem] mt-[5px]" style="color:var(--p);">▸</span>
+              <span>Pursuing a Diploma in Computer Science &amp;Technology (CST).</span>
+            </li>
+            <li class="flex items-start gap-3 text-[0.88rem] list-none" style="color:var(--text2);">
+              <span class="text-[0.6rem] mt-[5px]" style="color:var(--p);">▸</span>
+              <span>Currently working as a Web Developer at RadianTech.</span>
+            </li>
+            <li class="flex items-start gap-3 text-[0.88rem] list-none" style="color:var(--text2);">
+              <span class="text-[0.6rem] mt-[5px]" style="color:var(--p);">▸</span>
+              <span>Completed the Complete Web Development Course from Programming Hero.</span>
+            </li>
+            <li class="flex items-start gap-3 text-[0.88rem] list-none" style="color:var(--text2);">
+              <span class="text-[0.6rem] mt-[5px]" style="color:var(--p);">▸</span>
+              <span>Successfully completed a MERN Stack Development Internship at BD Calling.</span>
+            </li>
+            <li class="flex items-start gap-3 text-[0.88rem] list-none" style="color:var(--text2);">
+              <span class="text-[0.6rem] mt-[5px]" style="color:var(--p);">▸</span>
+              <span>Completed WordPress & Frontend Development training at TrustDevs.</span>
+            </li>
+          </ul>
+
+          <div class="flex flex-wrap gap-2 mt-2">
+            <span class="px-[0.8rem] py-[0.35rem] border rounded-full text-[0.72rem] font-medium inline-flex items-center gap-1.5 transition-all duration-300 hover:brightness-125" style="border-color:rgba(147,51,234,0.25); color:#a78bfa; background:rgba(147,51,234,0.1);">🎓 Diploma CST</span>
+            <span class="px-[0.8rem] py-[0.35rem] border rounded-full text-[0.72rem] font-medium inline-flex items-center gap-1.5 transition-all duration-300 hover:brightness-125" style="border-color:rgba(147,51,234,0.25); color:#a78bfa; background:rgba(147,51,234,0.1);">🚀 Programming Hero</span>
+            <span class="px-[0.8rem] py-[0.35rem] border rounded-full text-[0.72rem] font-medium inline-flex items-center gap-1.5 transition-all duration-300 hover:brightness-125" style="border-color:rgba(147,51,234,0.25); color:#a78bfa; background:rgba(147,51,234,0.1);">⚛️ MERN Stack</span>
+            <span class="px-[0.8rem] py-[0.35rem] border rounded-full text-[0.72rem] font-medium inline-flex items-center gap-1.5 transition-all duration-300 hover:brightness-125" style="border-color:rgba(147,51,234,0.25); color:#a78bfa; background:rgba(147,51,234,0.1);">🌐 WordPress</span>
+            <span class="px-[0.8rem] py-[0.35rem] border rounded-full text-[0.72rem] font-medium inline-flex items-center gap-1.5 transition-all duration-300 hover:brightness-125" style="border-color:rgba(147,51,234,0.25); color:#a78bfa; background:rgba(147,51,234,0.1);">💻 Frontend Development</span>
+            <span class="px-[0.8rem] py-[0.35rem] border rounded-full text-[0.72rem] font-medium inline-flex items-center gap-1.5 transition-all duration-300 hover:brightness-125" style="border-color:rgba(147,51,234,0.25); color:#a78bfa; background:rgba(147,51,234,0.1);">📐 Clean Code</span>
+          </div>
+        </div>
+
+        <div class="flex flex-col gap-5 h-full">
+          <div class="about-mini-card flex-1 rounded-[18px] p-[1.8rem] border flex flex-col gap-2 backdrop-blur-sm transition-all duration-300 hover:-translate-y-1.5" style="background:var(--card); border-color:var(--border);">
+            <span class="text-[1.4rem] text-amber-400 mb-1">💼</span>
+            <h4 class="text-[1rem] font-bold" style="color:var(--text);">Web Developer at RadianTech</h4>
+            <p class="text-[0.82rem] leading-[1.6]" style="color:var(--muted);">Working on professional web applications, building responsive user interfaces, and contributing to real-world development projects.</p>
+          </div>
+          <div class="about-mini-card flex-1 rounded-[18px] p-[1.8rem] border flex flex-col gap-2 backdrop-blur-sm transition-all duration-300 hover:-translate-y-1.5" style="background:var(--card); border-color:var(--border);">
+            <span class="text-[1.4rem] text-pink-500 mb-1">🚀</span>
+            <h4 class="text-[1rem] font-bold" style="color:var(--text);">MERN Stack Internship</h4>
+            <p class="text-[0.82rem] leading-[1.6]" style="color:var(--muted);">Completed a MERN Stack Development Internship at BD Calling, gaining practical experience in teamwork, project development, and modern web technologies.</p>
+          </div>
+          <div class="about-mini-card flex-1 rounded-[18px] p-[1.8rem] border flex flex-col gap-2 backdrop-blur-sm transition-all duration-300 hover:-translate-y-1.5" style="background:var(--card); border-color:var(--border);">
+            <span class="text-[1.4rem] text-yellow-400 mb-1">📚</span>
+            <h4 class="text-[1rem] font-bold" style="color:var(--text);">Continuous Learning</h4>
+            <p class="text-[0.82rem] leading-[1.6]" style="color:var(--muted);">Strengthened my development skills through Programming Hero and TrustDevs by learning Frontend Development, React, and WordPress while building practical projects.</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="glow-divider"></div>
+
+<!-- ==========================================
+     SKILLS SECTION
+========================================== -->
+<section id="skills" class="relative z-[1]">
+  <div class="px-12 py-[6.5rem] max-w-[1200px] mx-auto">
+    <div class="reveal">
+      <div class="section-label font-mono text-[0.68rem] tracking-[0.22em] uppercase mb-3 flex items-center gap-3" style="color:var(--p);">Technical Arsenal</div>
+      <h2 class="text-[clamp(1.8rem,4vw,3rem)] font-bold leading-[1.15] tracking-[-0.025em] mb-3" style="color:var(--text);">What I work with.</h2>
+      <p class="text-[0.95rem] leading-[1.75] max-w-[520px]" style="color:var(--muted);">Specialized in the frontend ecosystem — from design systems to production-grade React apps.</p>
+    </div>
+    
+    <div class="grid mt-14 gap-5 grid-cols-1 md:grid-cols-2 lg:grid-cols-3" id="skillsSection">
+
+      <div class="skill-cat-card reveal relative overflow-hidden rounded-[14px] p-[1.6rem] border transition-all duration-300 hover:-translate-y-1" style="background:var(--card);border-color:var(--border);cursor:none;transition-delay:0.05s;">
+        <div class="text-[1.8rem] mb-3">⚛️</div>
+        <div class="text-[0.78rem] font-bold uppercase tracking-[0.08em] mb-1" style="color:var(--text);">Core Frontend</div>
+        <div class="flex items-center gap-3 mt-2"><span class="text-[0.72rem] w-[90px]" style="color:var(--text2);">React</span><div class="flex-1 h-[3px] rounded-sm overflow-hidden" style="background:rgba(147,51,234,0.1);"><div class="skill-fill" data-width="95"></div></div><span class="font-mono text-[0.65rem] w-[30px] text-right" style="color:var(--muted);">75%</span></div>
+        <div class="flex items-center gap-3 mt-2"><span class="text-[0.72rem] w-[90px]" style="color:var(--text2);">JavaScript</span><div class="flex-1 h-[3px] rounded-sm overflow-hidden" style="background:rgba(147,51,234,0.1);"><div class="skill-fill" data-width="93"></div></div><span class="font-mono text-[0.65rem] w-[30px] text-right" style="color:var(--muted);">83%</span></div>
+        <div class="flex items-center gap-3 mt-2"><span class="text-[0.72rem] w-[90px]" style="color:var(--text2);">HTML5</span><div class="flex-1 h-[3px] rounded-sm overflow-hidden" style="background:rgba(147,51,234,0.1);"><div class="skill-fill" data-width="88"></div></div><span class="font-mono text-[0.65rem] w-[30px] text-right" style="color:var(--muted);">95%</span></div>
+        <div class="flex items-center gap-3 mt-2"><span class="text-[0.72rem] w-[90px]" style="color:var(--text2);">CSS3</span><div class="flex-1 h-[3px] rounded-sm overflow-hidden" style="background:rgba(147,51,234,0.1);"><div class="skill-fill" data-width="88"></div></div><span class="font-mono text-[0.65rem] w-[30px] text-right" style="color:var(--muted);">92%</span></div>
+        <div class="flex items-center gap-3 mt-2"><span class="text-[0.72rem] w-[90px]" style="color:var(--text2);">Tailwind CSS</span><div class="flex-1 h-[3px] rounded-sm overflow-hidden" style="background:rgba(147,51,234,0.1);"><div class="skill-fill" data-width="88"></div></div><span class="font-mono text-[0.65rem] w-[30px] text-right" style="color:var(--muted);">95%</span></div>
+        <div class="flex flex-wrap gap-[0.35rem] mt-3">
+          <span class="font-mono text-[0.72rem] px-[0.6rem] py-[0.2rem] rounded-[4px]" style="background:rgba(147,51,234,0.1);border:1px solid rgba(147,51,234,0.2);color:var(--p4);">HTML5</span>
+          <span class="font-mono text-[0.72rem] px-[0.6rem] py-[0.2rem] rounded-[4px]" style="background:rgba(147,51,234,0.1);border:1px solid rgba(147,51,234,0.2);color:var(--p4);">CSS3</span>
+          <span class="font-mono text-[0.72rem] px-[0.6rem] py-[0.2rem] rounded-[4px]" style="background:rgba(147,51,234,0.1);border:1px solid rgba(147,51,234,0.2);color:var(--p4);">Tailwind CSS</span>
+          <span class="font-mono text-[0.72rem] px-[0.6rem] py-[0.2rem] rounded-[4px]" style="background:rgba(147,51,234,0.1);border:1px solid rgba(147,51,234,0.2);color:var(--p4);">React</span>
+        </div>
+      </div>
+
+      <div class="skill-cat-card reveal relative overflow-hidden rounded-[14px] p-[1.6rem] border transition-all duration-300 hover:-translate-y-1" style="background:var(--card);border-color:var(--border);cursor:none;transition-delay:0.1s;">
+        <div class="text-[1.8rem] mb-3">🎨</div>
+        <div class="text-[0.78rem] font-bold uppercase tracking-[0.08em] mb-1" style="color:var(--text);">Styling &amp; Design</div>
+        <div class="flex items-center gap-3 mt-2"><span class="text-[0.72rem] w-[90px]" style="color:var(--text2);">Tailwind CSS</span><div class="flex-1 h-[3px] rounded-sm overflow-hidden" style="background:rgba(147,51,234,0.1);"><div class="skill-fill" data-width="96"></div></div><span class="font-mono text-[0.65rem] w-[30px] text-right" style="color:var(--muted);">96%</span></div>
+        <div class="flex items-center gap-3 mt-2"><span class="text-[0.72rem] w-[90px]" style="color:var(--text2);">Daisy UI</span><div class="flex-1 h-[3px] rounded-sm overflow-hidden" style="background:rgba(147,51,234,0.1);"><div class="skill-fill" data-width="82"></div></div><span class="font-mono text-[0.65rem] w-[30px] text-right" style="color:var(--muted);">92%</span></div>
+        <div class="flex items-center gap-3 mt-2"><span class="text-[0.72rem] w-[90px]" style="color:var(--text2);">Responsive Design</span><div class="flex-1 h-[3px] rounded-sm overflow-hidden" style="background:rgba(147,51,234,0.1);"><div class="skill-fill" data-width="72"></div></div><span class="font-mono text-[0.65rem] w-[30px] text-right" style="color:var(--muted);">90%</span></div>
+        <div class="flex flex-wrap gap-[0.35rem] mt-3">
+          <span class="font-mono text-[0.72rem] px-[0.6rem] py-[0.2rem] rounded-[4px]" style="background:rgba(147,51,234,0.1);border:1px solid rgba(147,51,234,0.2);color:var(--p4);">Tailwind CSS</span>
+          <span class="font-mono text-[0.72rem] px-[0.6rem] py-[0.2rem] rounded-[4px]" style="background:rgba(147,51,234,0.1);border:1px solid rgba(147,51,234,0.2);color:var(--p4);">Daisy UI</span>
+          <span class="font-mono text-[0.72rem] px-[0.6rem] py-[0.2rem] rounded-[4px]" style="background:rgba(147,51,234,0.1);border:1px solid rgba(147,51,234,0.2);color:var(--p4);">Responsive UI</span>
+        </div>
+      </div>
+
+      <div class="skill-cat-card reveal relative overflow-hidden rounded-[14px] p-[1.6rem] border transition-all duration-300 hover:-translate-y-1" style="background:var(--card);border-color:var(--border);cursor:none;transition-delay:0.15s;">
+        <div class="text-[1.8rem] mb-3">🌐</div>
+        <div class="text-[0.78rem] font-bold uppercase tracking-[0.08em] mb-1" style="color:var(--text);">Web Development</div>
+        <div class="flex items-center gap-3 mt-2"><span class="text-[0.72rem] w-[90px]" style="color:var(--text2);">React Router</span><div class="flex-1 h-[3px] rounded-sm overflow-hidden" style="background:rgba(147,51,234,0.1);"><div class="skill-fill" data-width="88"></div></div><span class="font-mono text-[0.65rem] w-[30px] text-right" style="color:var(--muted);">50%</span></div>
+        <div class="flex items-center gap-3 mt-2"><span class="text-[0.72rem] w-[90px]" style="color:var(--text2);">REST API Integration</span><div class="flex-1 h-[3px] rounded-sm overflow-hidden" style="background:rgba(147,51,234,0.1);"><div class="skill-fill" data-width="85"></div></div><span class="font-mono text-[0.65rem] w-[30px] text-right" style="color:var(--muted);">65%</span></div>
+        <div class="flex items-center gap-3 mt-2"><span class="text-[0.72rem] w-[90px]" style="color:var(--text2);">WordPress</span><div class="flex-1 h-[3px] rounded-sm overflow-hidden" style="background:rgba(147,51,234,0.1);"><div class="skill-fill" data-width="80"></div></div><span class="font-mono text-[0.65rem] w-[30px] text-right" style="color:var(--muted);">80%</span></div>
+        <div class="flex flex-wrap gap-[0.35rem] mt-3">
+          <span class="font-mono text-[0.72rem] px-[0.6rem] py-[0.2rem] rounded-[4px]" style="background:rgba(147,51,234,0.1);border:1px solid rgba(147,51,234,0.2);color:var(--p4);">Context API</span>
+          <span class="font-mono text-[0.72rem] px-[0.6rem] py-[0.2rem] rounded-[4px]" style="background:rgba(147,51,234,0.1);border:1px solid rgba(147,51,234,0.2);color:var(--p4);">SWR</span>
+        </div>
+      </div>
+
+      <div class="skill-cat-card reveal relative overflow-hidden rounded-[14px] p-[1.6rem] border transition-all duration-300 hover:-translate-y-1" style="background:var(--card);border-color:var(--border);cursor:none;transition-delay:0.2s;">
+        <div class="text-[1.8rem] mb-3">🛠️</div>
+        <div class="text-[0.78rem] font-bold uppercase tracking-[0.08em] mb-1" style="color:var(--text);">Tools &amp; Version Control</div>
+        <div class="flex items-center gap-3 mt-2"><span class="text-[0.72rem] w-[90px]" style="color:var(--text2);">VS Code</span><div class="flex-1 h-[3px] rounded-sm overflow-hidden" style="background:rgba(147,51,234,0.1);"><div class="skill-fill" data-width="78"></div></div><span class="font-mono text-[0.65rem] w-[30px] text-right" style="color:var(--muted);">90%</span></div>
+        <div class="flex items-center gap-3 mt-2"><span class="text-[0.72rem] w-[90px]" style="color:var(--text2);">Git</span><div class="flex-1 h-[3px] rounded-sm overflow-hidden" style="background:rgba(147,51,234,0.1);"><div class="skill-fill" data-width="75"></div></div><span class="font-mono text-[0.65rem] w-[30px] text-right" style="color:var(--muted);">90%</span></div>
+        <div class="flex items-center gap-3 mt-2"><span class="text-[0.72rem] w-[90px]" style="color:var(--text2);">GitHub</span><div class="flex-1 h-[3px] rounded-sm overflow-hidden" style="background:rgba(147,51,234,0.1);"><div class="skill-fill" data-width="82"></div></div><span class="font-mono text-[0.65rem] w-[30px] text-right" style="color:var(--muted);">90%</span></div>
+        <div class="flex items-center gap-3 mt-2"><span class="text-[0.72rem] w-[90px]" style="color:var(--text2);">AI-Assisted Dev</span><div class="flex-1 h-[3px] rounded-sm overflow-hidden" style="background:rgba(147,51,234,0.1);"><div class="skill-fill" data-width="82"></div></div><span class="font-mono text-[0.65rem] w-[30px] text-right" style="color:var(--muted);">82%</span></div>
+        <div class="flex flex-wrap gap-[0.35rem] mt-3">
+          <span class="font-mono text-[0.72rem] px-[0.6rem] py-[0.2rem] rounded-[4px]" style="background:rgba(147,51,234,0.1);border:1px solid rgba(147,51,234,0.2);color:var(--p4);">VS Code</span>
+          <span class="font-mono text-[0.72rem] px-[0.6rem] py-[0.2rem] rounded-[4px]" style="background:rgba(147,51,234,0.1);border:1px solid rgba(147,51,234,0.2);color:var(--p4);">Git</span>
+          <span class="font-mono text-[0.72rem] px-[0.6rem] py-[0.2rem] rounded-[4px]" style="background:rgba(147,51,234,0.1);border:1px solid rgba(147,51,234,0.2);color:var(--p4);">GitHub</span>
+          <span class="font-mono text-[0.72rem] px-[0.6rem] py-[0.2rem] rounded-[4px]" style="background:rgba(147,51,234,0.1);border:1px solid rgba(147,51,234,0.2);color:var(--p4);">AI Tools</span>
+        </div>
+      </div>
+
+      <div class="skill-cat-card reveal relative overflow-hidden rounded-[14px] p-[1.6rem] border transition-all duration-300 hover:-translate-y-1" style="background:var(--card);border-color:var(--border);cursor:none;transition-delay:0.25s;">
+        <div class="text-[1.8rem] mb-3">🚀</div>
+        <div class="text-[0.78rem] font-bold uppercase tracking-[0.08em] mb-1" style="color:var(--text);">Development Skills</div>
+        <div class="flex items-center gap-3 mt-2"><span class="text-[0.72rem] w-[90px]" style="color:var(--text2);">Component-Based Dev</span><div class="flex-1 h-[3px] rounded-sm overflow-hidden" style="background:rgba(147,51,234,0.1);"><div class="skill-fill" data-width="76"></div></div><span class="font-mono text-[0.65rem] w-[30px] text-right" style="color:var(--muted);">76%</span></div>
+        <div class="flex items-center gap-3 mt-2"><span class="text-[0.72rem] w-[90px]" style="color:var(--text2);">Responsive Web Design</span><div class="flex-1 h-[3px] rounded-sm overflow-hidden" style="background:rgba(147,51,234,0.1);"><div class="skill-fill" data-width="70"></div></div><span class="font-mono text-[0.65rem] w-[30px] text-right" style="color:var(--muted);">90%</span></div>
+        <div class="flex items-center gap-3 mt-2"><span class="text-[0.72rem] w-[90px]" style="color:var(--text2);">Pixel Perfect UI</span><div class="flex-1 h-[3px] rounded-sm overflow-hidden" style="background:rgba(147,51,234,0.1);"><div class="skill-fill" data-width="65"></div></div><span class="font-mono text-[0.65rem] w-[30px] text-right" style="color:var(--muted);">85%</span></div>
+        <div class="flex flex-wrap gap-[0.35rem] mt-3">
+          <span class="font-mono text-[0.72rem] px-[0.6rem] py-[0.2rem] rounded-[4px]" style="background:rgba(147,51,234,0.1);border:1px solid rgba(147,51,234,0.2);color:var(--p4);">Responsive</span>
+          <span class="font-mono text-[0.72rem] px-[0.6rem] py-[0.2rem] rounded-[4px]" style="background:rgba(147,51,234,0.1);border:1px solid rgba(147,51,234,0.2);color:var(--p4);">Components</span>
+          <span class="font-mono text-[0.72rem] px-[0.6rem] py-[0.2rem] rounded-[4px]" style="background:rgba(147,51,234,0.1);border:1px solid rgba(147,51,234,0.2);color:var(--p4);">UI Design</span>
+        </div>
+      </div>
+
+      <div class="skill-cat-card reveal relative overflow-hidden rounded-[14px] p-[1.6rem] border transition-all duration-300 hover:-translate-y-1" style="background:var(--card);border-color:var(--border);cursor:none;transition-delay:0.3s;">
+        <div class="text-[1.8rem] mb-3">📚</div>
+        <div class="text-[0.78rem] font-bold uppercase tracking-[0.08em] mb-1" style="color:var(--text);">Currently Learning</div>
+        <div class="flex items-center gap-3 mt-2"><span class="text-[0.72rem] w-[90px]" style="color:var(--text2);">React Router</span><div class="flex-1 h-[3px] rounded-sm overflow-hidden" style="background:rgba(147,51,234,0.1);"><div class="skill-fill" data-width="90"></div></div><span class="font-mono text-[0.65rem] w-[30px] text-right" style="color:var(--muted);">30%</span></div>
+        <div class="flex items-center gap-3 mt-2"><span class="text-[0.72rem] w-[90px]" style="color:var(--text2);">Node.js</span><div class="flex-1 h-[3px] rounded-sm overflow-hidden" style="background:rgba(147,51,234,0.1);"><div class="skill-fill" data-width="62"></div></div><span class="font-mono text-[0.65rem] w-[30px] text-right" style="color:var(--muted);">45%</span></div>
+        <div class="flex items-center gap-3 mt-2"><span class="text-[0.72rem] w-[90px]" style="color:var(--text2);">Modern React</span><div class="flex-1 h-[3px] rounded-sm overflow-hidden" style="background:rgba(147,51,234,0.1);"><div class="skill-fill" data-width="80"></div></div><span class="font-mono text-[0.65rem] w-[30px] text-right" style="color:var(--muted);">60%</span></div>
+        <div class="flex flex-wrap gap-[0.35rem] mt-3">
+          <span class="font-mono text-[0.72rem] px-[0.6rem] py-[0.2rem] rounded-[4px]" style="background:rgba(147,51,234,0.1);border:1px solid rgba(147,51,234,0.2);color:var(--p4);">Learning</span>
+          <span class="font-mono text-[0.72rem] px-[0.6rem] py-[0.2rem] rounded-[4px]" style="background:rgba(147,51,234,0.1);border:1px solid rgba(147,51,234,0.2);color:var(--p4);">Node.js</span>
+          <span class="font-mono text-[0.72rem] px-[0.6rem] py-[0.2rem] rounded-[4px]" style="background:rgba(147,51,234,0.1);border:1px solid rgba(147,51,234,0.2);color:var(--p4);">React Router</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<div class="glow-divider"></div>
+
+<!-- ==========================================
+     PROJECTS SECTION
+========================================== -->
+<section id="projects" class="relative z-[1]" style="background:linear-gradient(180deg,var(--bg2) 0%,var(--bg) 100%);">
+  <div class="px-12 py-[6.5rem] max-w-[1200px] mx-auto">
+    <div class="reveal">
+      <div class="section-label font-mono text-[0.68rem] tracking-[0.22em] uppercase mb-3 flex items-center gap-3" style="color:var(--p);">Featured Work</div>
+      <h2 class="text-[clamp(1.8rem,4vw,3rem)] font-bold leading-[1.15] tracking-[-0.025em] mb-3" style="color:var(--text);">Things I've built.</h2>
+      <p class="text-[0.95rem] leading-[1.75] max-w-[520px]" style="color:var(--muted);">A curated selection of projects — from SaaS platforms to open-source UI libraries.</p>
+    </div>
+    <div class="flex gap-2 flex-wrap my-8 reveal" style="transition-delay:0.1s;">
+      <button class="filter-btn active px-4 py-[0.38rem] rounded-full border text-[0.78rem] transition-all duration-300" style="border-color:var(--p2);background:var(--p2);color:#fff;box-shadow:0 0 14px rgba(147,51,234,0.3);cursor:none;font-family:'Space Grotesk',sans-serif;">React</button>
+      <button class="filter-btn px-4 py-[0.38rem] rounded-full border text-[0.78rem] transition-all duration-300" style="border-color:var(--border);background:transparent;color:var(--muted);cursor:none;font-family:'Space Grotesk',sans-serif;">TypScript</button>
+      <button class="filter-btn px-4 py-[0.38rem] rounded-full border text-[0.78rem] transition-all duration-300" style="border-color:var(--border);background:transparent;color:var(--muted);cursor:none;font-family:'Space Grotesk',sans-serif;">React.js</button>
+      <button class="filter-btn px-4 py-[0.38rem] rounded-full border text-[0.78rem] transition-all duration-300" style="border-color:var(--border);background:transparent;color:var(--muted);cursor:none;font-family:'Space Grotesk',sans-serif;">JavaScript</button>
+      <button class="filter-btn px-4 py-[0.38rem] rounded-full border text-[0.78rem] transition-all duration-300" style="border-color:var(--border);background:transparent;color:var(--muted);cursor:none;font-family:'Space Grotesk',sans-serif;">Web App</button>
+    </div>
+    <div class="grid gap-[1.6rem]" style="grid-template-columns:repeat(auto-fit,minmax(330px,1fr));">
+<!-- 1 -->
+      <div class="project-card reveal relative rounded-[16px] overflow-hidden border transition-all duration-300 hover:-translate-y-1.5" style="background:var(--card);border-color:var(--border);cursor:none;transition-delay:0.05s;">
+        <span class="absolute top-[0.9rem] left-[0.9rem] z-[4] text-white text-[0.6rem] font-bold px-[0.6rem] py-[0.18rem] rounded-full tracking-[0.06em]" style="background:linear-gradient(135deg,var(--p2),var(--p3));">★ Featured</span>
+        <div class="project-thumb relative h-[190px] flex items-center justify-center overflow-hidden">
+          <div class="pt-bg pt1"></div>
+           <img class="relative z-[1]" src="image/1.png" alt="">
+          <div class="project-overlay">
+            <a href="https://reale-estate-company.lovable.app/" target="_blank" class="px-[1.1rem] py-2 rounded-[6px] text-[0.76rem] font-semibold no-underline transition-all duration-300 hover:scale-105" style="background:var(--p2);color:#fff; ">Live Demo</a>
+          </div>
+        </div>
+        <div class="p-[1.4rem]">
+          <div class="flex flex-wrap gap-[0.35rem] mb-3">
+            <span class="font-mono text-[0.63rem] px-[0.5rem] py-[0.14rem] rounded-[3px]" style="color:var(--p4);background:rgba(147,51,234,0.1);border:1px solid rgba(147,51,234,0.18);">React</span>
+            <span class="font-mono text-[0.63rem] px-[0.5rem] py-[0.14rem] rounded-[3px]" style="color:var(--p4);background:rgba(147,51,234,0.1);border:1px solid rgba(147,51,234,0.18);">Tailwind CSS</span>
+            <span class="font-mono text-[0.63rem] px-[0.5rem] py-[0.14rem] rounded-[3px]" style="color:var(--p4);background:rgba(147,51,234,0.1);border:1px solid rgba(147,51,234,0.18);">Responsive UI</span>
+          </div>
+          <div class="text-[1.05rem] font-bold mb-2" style="color:var(--text);">EstateLuxe — Real Estate Platform</div>
+          <div class="text-[0.82rem] leading-[1.6]" style="color:var(--muted);">A modern real estate listing website with property search, filters, agent profiles, and detailed listing pages for buyers and renters.</div>
+        </div>
+      </div>
+<!-- 2 -->
+      <div class="project-card reveal relative rounded-[16px] overflow-hidden border transition-all duration-300 hover:-translate-y-1.5" style="background:var(--card);border-color:var(--border);cursor:none;transition-delay:0.05s;">
+        <div class="project-thumb relative h-[190px] flex items-center justify-center overflow-hidden">
+          <div class="pt-bg pt1"></div>
+           <img class="relative z-[1]" src="image/2.png" alt="">
+          <div class="project-overlay">
+            <a href="https://shop-spherebd.lovable.app/" target="_blank" class="px-[1.1rem] py-2 rounded-[6px] text-[0.76rem] font-semibold no-underline transition-all duration-300 hover:scale-105" style="background:var(--p2);color:#fff; ">Live Demo</a>
+          </div>
+        </div>
+        <div class="p-[1.4rem]">
+          <div class="flex flex-wrap gap-[0.35rem] mb-3">
+            <span class="font-mono text-[0.63rem] px-[0.5rem] py-[0.14rem] rounded-[3px]" style="color:var(--p4);background:rgba(147,51,234,0.1);border:1px solid rgba(147,51,234,0.18);">React</span>
+            <span class="font-mono text-[0.63rem] px-[0.5rem] py-[0.14rem] rounded-[3px]" style="color:var(--p4);background:rgba(147,51,234,0.1);border:1px solid rgba(147,51,234,0.18);">Tailwind CSS</span>
+            <span class="font-mono text-[0.63rem] px-[0.5rem] py-[0.14rem] rounded-[3px]" style="color:var(--p4);background:rgba(147,51,234,0.1);border:1px solid rgba(147,51,234,0.18);">Cart &amp; Checkout</span>
+          </div>
+          <div class="text-[1.05rem] font-bold mb-2" style="color:var(--text);">ShopSphere — E-Commerce Platform</div>
+          <div class="text-[0.82rem] leading-[1.6]" style="color:var(--muted);">A sleek online store with product catalog, cart, checkout flow, and a clean responsive shopping experience built for Bangladeshi customers.</div>
+        </div>
+      </div>
+<!-- 3 -->
+      <div class="project-card reveal relative rounded-[16px] overflow-hidden border transition-all duration-300 hover:-translate-y-1.5" style="background:var(--card);border-color:var(--border);cursor:none;transition-delay:0.15s;">
+        <div class="project-thumb relative h-[190px] flex items-center justify-center overflow-hidden">
+          <div class="pt-bg pt3"></div>
+            <img class="relative z-[1]" src="image/3.png" alt="">
+          <div class="project-overlay">
+            <a href="https://medilisthub.netlify.app/" target="_blank" class="px-[1.1rem] py-2 rounded-[6px] text-[0.76rem] font-semibold no-underline transition-all duration-300" style="background:var(--p2);color:#fff;">Live Demo</a>
+            <a href="https://github.com/Farzanayesmin21/Medilist-Project.git" target="_blank" class="px-[1.1rem] py-2 rounded-[6px] text-[0.76rem] font-semibold no-underline border transition-all duration-300" style="background:rgba(12,6,24,0.85);border-color:var(--border-hover);color:var(--text);">GitHub</a>
+          </div>
+        </div>
+        <div class="p-[1.4rem]">
+          <div class="flex flex-wrap gap-[0.35rem] mb-3">
+            <span class="font-mono text-[0.63rem] px-[0.5rem] py-[0.14rem] rounded-[3px]" style="color:var(--p4);background:rgba(147,51,234,0.1);border:1px solid rgba(147,51,234,0.18);">React</span>
+            <span class="font-mono text-[0.63rem] px-[0.5rem] py-[0.14rem] rounded-[3px]" style="color:var(--p4);background:rgba(147,51,234,0.1);border:1px solid rgba(147,51,234,0.18);">Firebase</span>
+            <span class="font-mono text-[0.63rem] px-[0.5rem] py-[0.14rem] rounded-[3px]" style="color:var(--p4);background:rgba(147,51,234,0.1);border:1px solid rgba(147,51,234,0.18);">Tailwind CSS</span>
+          </div>
+          <div class="text-[1.05rem] font-bold mb-2" style="color:var(--text);">MediList — Medicine &amp; Pharmacy Finder</div>
+          <div class="text-[0.82rem] leading-[1.6]" style="color:var(--muted);">A medicine search and pharmacy listing platform where users can browse medicines by category, check details, and find nearby pharmacies.</div>
+        </div>
+      </div>
+<!-- 4 -->
+      <div class="project-card reveal relative rounded-[16px] overflow-hidden border transition-all duration-300 hover:-translate-y-1.5" style="background:var(--card);border-color:var(--border);cursor:none;transition-delay:0.2s;">
+        <span class="absolute top-[0.9rem] left-[0.9rem] z-[4] text-white text-[0.6rem] font-bold px-[0.6rem] py-[0.18rem] rounded-full tracking-[0.06em]" style="background:linear-gradient(135deg,var(--p2),var(--p3));">Open Source</span>
+        <div class="project-thumb relative h-[190px] flex items-center justify-center overflow-hidden">
+          <div class="pt-bg pt5"></div>
+          <img class="relative z-[1]" src="image/4.png" alt="">
+
+          <div class="project-overlay">
+            <a href="https://farzanayesmin21.github.io/Payoo-App/home.html" target="_blank" class="px-[1.1rem] py-2 rounded-[6px] text-[0.76rem] font-semibold no-underline transition-all duration-300" style="background:var(--p2);color:#fff;">Live Link</a>
+            <a href="https://github.com/Farzanayesmin21/Payoo-App.git" target="_blank" class="px-[1.1rem] py-2 rounded-[6px] text-[0.76rem] font-semibold no-underline border transition-all duration-300" style="background:rgba(12,6,24,0.85);border-color:var(--border-hover);color:var(--text);">GitHub</a>
+          </div>
+        </div>
+        <div class="p-[1.4rem]">
+          <div class="flex flex-wrap gap-[0.35rem] mb-3">
+            <span class="font-mono text-[0.63rem] px-[0.5rem] py-[0.14rem] rounded-[3px]" style="color:var(--p4);background:rgba(147,51,234,0.1);border:1px solid rgba(147,51,234,0.18);">HTML</span>
+            <span class="font-mono text-[0.63rem] px-[0.5rem] py-[0.14rem] rounded-[3px]" style="color:var(--p4);background:rgba(147,51,234,0.1);border:1px solid rgba(147,51,234,0.18);">CSS</span>
+            <span class="font-mono text-[0.63rem] px-[0.5rem] py-[0.14rem] rounded-[3px]" style="color:var(--p4);background:rgba(147,51,234,0.1);border:1px solid rgba(147,51,234,0.18);">JavaScript</span>
+          </div>
+          <div class="text-[1.05rem] font-bold mb-2" style="color:var(--text);">Payoo — Digital Wallet App UI</div>
+          <div class="text-[0.82rem] leading-[1.6]" style="color:var(--muted);">A mobile-first digital wallet interface with balance overview, send/receive money screens, and transaction history — built fully with vanilla JS.</div>
+        </div>
+      </div>
+<!-- 5 -->
+      <div class="project-card reveal relative rounded-[16px] overflow-hidden border transition-all duration-300 hover:-translate-y-1.5" style="background:var(--card);border-color:var(--border);cursor:none;transition-delay:0.1s;">
+        <div class="project-thumb relative h-[190px] flex items-center justify-center overflow-hidden">
+          <div class="pt-bg pt2"></div>
+            <img class="relative z-[1]" src="image/5.png" alt="">
+          <div class="project-overlay">
+            <a href="https://farhanportflio.netlify.app/" target="_blank" class="px-[1.1rem] py-2 rounded-[6px] text-[0.76rem] font-semibold no-underline transition-all duration-300" style="background:var(--p2);color:#fff;">Live Demo</a>
+            <a href="https://github.com/Farzanayesmin21/Farhansprotfolio.git" target="_blank" class="px-[1.1rem] py-2 rounded-[6px] text-[0.76rem] font-semibold no-underline border transition-all duration-300" style="background:rgba(12,6,24,0.85);border-color:var(--border-hover);color:var(--text);">GitHub</a>
+          </div>
+        </div>
+        <div class="p-[1.4rem]">
+          <div class="flex flex-wrap gap-[0.35rem] mb-3">
+            <span class="font-mono text-[0.63rem] px-[0.5rem] py-[0.14rem] rounded-[3px]" style="color:var(--p4);background:rgba(147,51,234,0.1);border:1px solid rgba(147,51,234,0.18);">React</span>
+            <span class="font-mono text-[0.63rem] px-[0.5rem] py-[0.14rem] rounded-[3px]" style="color:var(--p4);background:rgba(147,51,234,0.1);border:1px solid rgba(147,51,234,0.18);">Tailwind CSS</span>
+            <span class="font-mono text-[0.63rem] px-[0.5rem] py-[0.14rem] rounded-[3px]" style="color:var(--p4);background:rgba(147,51,234,0.1);border:1px solid rgba(147,51,234,0.18);">JavaScript</span>
+          </div>
+          <div class="text-[1.05rem] font-bold mb-2" style="color:var(--text);">Farhan's Portfolio — Personal Site</div>
+          <div class="text-[0.82rem] leading-[1.6]" style="color:var(--muted);">A personal portfolio website built for a client, showcasing their projects, skills, and an integrated contact form for inquiries.</div>
+        </div>
+      </div>
+<!-- 6 -->
+      <div class="project-card reveal relative rounded-[16px] overflow-hidden border transition-all duration-300 hover:-translate-y-1.5" style="background:var(--card);border-color:var(--border);cursor:none;transition-delay:0.3s;">
+        <div class="project-thumb relative h-[190px] flex items-center justify-center overflow-hidden">
+          <div class="pt-bg pt6"></div>
+            <img class="relative z-[1]" src="image/6.png" alt="">
+          <div class="project-overlay">
+            <a href="https://radiantechbd.com/" target="_blank" class="px-[1.1rem] py-2 rounded-[6px] text-[0.76rem] font-semibold no-underline transition-all duration-300" style="background:var(--p2);color:#fff;">Live Demo</a>
+          </div>
+        </div>
+        <div class="p-[1.4rem]">
+          <div class="flex flex-wrap gap-[0.35rem] mb-3">
+            <span class="font-mono text-[0.63rem] px-[0.5rem] py-[0.14rem] rounded-[3px]" style="color:var(--p4);background:rgba(147,51,234,0.1);border:1px solid rgba(147,51,234,0.18);">JavaScript</span>
+            <span class="font-mono text-[0.63rem] px-[0.5rem] py-[0.14rem] rounded-[3px]" style="color:var(--p4);background:rgba(147,51,234,0.1);border:1px solid rgba(147,51,234,0.18);">Tailwind CSS</span>
+            <span class="font-mono text-[0.63rem] px-[0.5rem] py-[0.14rem] rounded-[3px]" style="color:var(--p4);background:rgba(147,51,234,0.1);border:1px solid rgba(147,51,234,0.18);">Business Site</span>
+          </div>
+          <div class="text-[1.05rem] font-bold mb-2" style="color:var(--text);">RadianTech BD — Company Website</div>
+          <div class="text-[0.82rem] leading-[1.6]" style="color:var(--muted);">A corporate website for a tech company, featuring service pages, team showcase, and a client onboarding/contact flow.</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<div class="glow-divider"></div>
+
+<!-- ==========================================
+     SERVICES SECTION
+========================================== -->
+<section id="services" class="relative z-[1]">
+  <div class="px-12 py-[6.5rem] max-w-[1200px] mx-auto">
+    <div class="reveal">
+      <div class="section-label font-mono text-[0.68rem] tracking-[0.22em] uppercase mb-3 flex items-center gap-3" style="color:var(--p);">What I Offer</div>
+      <h2 class="text-[clamp(1.8rem,4vw,3rem)] font-bold leading-[1.15] tracking-[-0.025em] mb-3" style="color:var(--text);">Services I provide.</h2>
+      <p class="text-[0.95rem] leading-[1.75] max-w-[520px]" style="color:var(--muted);">End-to-end frontend solutions — from initial design to deployed production apps.</p>
+    </div>
+    <div class="grid mt-14 gap-[1.4rem]" style="grid-template-columns:repeat(auto-fit,minmax(280px,1fr));">
+
+      <!-- Row 1 -->
+      <div class="service-card reveal relative overflow-hidden rounded-[16px] p-8 border transition-all duration-300 hover:-translate-y-1" style="background:var(--card);border-color:var(--border);cursor:none;transition-delay:0.05s;">
+        <div class="srv-icon-el w-[54px] h-[54px] rounded-[14px] flex items-center justify-center text-[1.6rem] mb-5 border transition-all duration-300" style="background:rgba(147,51,234,0.12);border-color:rgba(147,51,234,0.22);">💻</div>
+        <div class="text-[1rem] font-bold mb-2" style="color:var(--text);">Frontend Development</div>
+        <div class="text-[0.83rem] leading-[1.65]" style="color:var(--muted);">Building modern, responsive, and user-friendly websites using HTML, CSS, Tailwind CSS, JavaScript, and React with clean, maintainable code.</div>
+      </div>
+      <div class="service-card reveal relative overflow-hidden rounded-[16px] p-8 border transition-all duration-300 hover:-translate-y-1" style="background:var(--card);border-color:var(--border);cursor:none;transition-delay:0.1s;">
+        <div class="srv-icon-el w-[54px] h-[54px] rounded-[14px] flex items-center justify-center text-[1.6rem] mb-5 border transition-all duration-300" style="background:rgba(147,51,234,0.12);border-color:rgba(147,51,234,0.22);">📱</div>
+        <div class="text-[1rem] font-bold mb-2" style="color:var(--text);">Responsive Web Design</div>
+        <div class="text-[0.83rem] leading-[1.65]" style="color:var(--muted);">Creating mobile-first, fully responsive websites that deliver a seamless experience across desktops, tablets, and smartphones.</div>
+      </div>
+      <div class="service-card reveal relative overflow-hidden rounded-[16px] p-8 border transition-all duration-300 hover:-translate-y-1" style="background:var(--card);border-color:var(--border);cursor:none;transition-delay:0.15s;">
+        <div class="srv-icon-el w-[54px] h-[54px] rounded-[14px] flex items-center justify-center text-[1.6rem] mb-5 border transition-all duration-300" style="background:rgba(147,51,234,0.12);border-color:rgba(147,51,234,0.22);">📝</div>
+        <div class="text-[1rem] font-bold mb-2" style="color:var(--text);">WordPress Website Development</div>
+        <div class="text-[0.83rem] leading-[1.65]" style="color:var(--muted);">Developing and customizing WordPress websites for businesses, blogs, and portfolios with responsive layouts and easy content management.</div>
+      </div>
+
+      <!-- Row 2 -->
+      <div class="service-card reveal relative overflow-hidden rounded-[16px] p-8 border transition-all duration-300 hover:-translate-y-1" style="background:var(--card);border-color:var(--border);cursor:none;transition-delay:0.2s;">
+        <div class="srv-icon-el w-[54px] h-[54px] rounded-[14px] flex items-center justify-center text-[1.6rem] mb-5 border transition-all duration-300" style="background:rgba(147,51,234,0.12);border-color:rgba(147,51,234,0.22);">🔄</div>
+        <div class="text-[1rem] font-bold mb-2" style="color:var(--text);">Website Redesign</div>
+        <div class="text-[0.83rem] leading-[1.65]" style="color:var(--muted);">Transforming outdated websites into modern, visually appealing, and responsive experiences with improved usability and design consistency.</div>
+      </div>
+      <div class="service-card reveal relative overflow-hidden rounded-[16px] p-8 border transition-all duration-300 hover:-translate-y-1" style="background:var(--card);border-color:var(--border);cursor:none;transition-delay:0.25s;">
+        <div class="srv-icon-el w-[54px] h-[54px] rounded-[14px] flex items-center justify-center text-[1.6rem] mb-5 border transition-all duration-300" style="background:rgba(147,51,234,0.12);border-color:rgba(147,51,234,0.22);">🛠️</div>
+        <div class="text-[1rem] font-bold mb-2" style="color:var(--text);">Website Maintenance</div>
+        <div class="text-[0.83rem] leading-[1.65]" style="color:var(--muted);">Providing ongoing website updates, content changes, bug fixes, and UI improvements to keep your website secure, functional, and up to date.</div>
+      </div>
+      <div class="service-card reveal relative overflow-hidden rounded-[16px] p-8 border transition-all duration-300 hover:-translate-y-1" style="background:var(--card);border-color:var(--border);cursor:none;transition-delay:0.3s;">
+        <div class="srv-icon-el w-[54px] h-[54px] rounded-[14px] flex items-center justify-center text-[1.6rem] mb-5 border transition-all duration-300" style="background:rgba(147,51,234,0.12);border-color:rgba(147,51,234,0.22);">⚡</div>
+        <div class="text-[1rem] font-bold mb-2" style="color:var(--text);">Website Performance Optimization</div>
+        <div class="text-[0.83rem] leading-[1.65]" style="color:var(--muted);">Improving website speed, responsiveness, and overall user experience through optimized code, efficient assets, and frontend best practices.</div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<div class="glow-divider"></div>
+
+<!-- ==========================================
+     EXPERIENCE SECTION
+========================================== -->
+<section id="experience" class="relative z-[1]">
+  <div class="px-12 py-[6.5rem] max-w-[1200px] mx-auto">
+    <div class="grid grid-cols-1 lg:grid-cols-[1fr_1.5fr] gap-12 items-start">
+      <div class="exp-sticky-col lg:sticky lg:top-[110px] reveal-left">
+        <div class="section-label font-mono text-[0.68rem] tracking-[0.22em] uppercase mb-3 flex items-center gap-3" style="color:var(--p);">Career Timeline</div>
+        <h2 class="text-[clamp(1.8rem,4vw,3rem)] font-bold leading-[1.15] tracking-[-0.025em] mb-3" style="color:var(--text);">Where I've worked.</h2>
+        <p class="text-[0.95rem] leading-[1.75] max-w-[420px]" style="color:var(--muted);">A journey through teams, products, and challenges that shaped how I build for the web.</p>
+      </div>
+      <div class="timeline">
+        <div class="tl-item reveal-right relative mb-12" style="transition-delay:0.05s;">
+        <div class="tl-dot absolute rounded-full border-[2.5px]" style="left:-2.8rem;top:4px;width:18px;height:18px;background:linear-gradient(135deg,var(--p3),var(--p));border-color:var(--bg);box-shadow:0 0 14px rgba(147,51,234,0.55);"></div>
+        <div class="w-10 h-10 rounded-[10px] border flex items-center justify-center text-[1.3rem] mb-3" style="border-color:var(--border);background:var(--bg3);">🎓</div>
+        <div class="font-mono text-[0.68rem] mb-1 flex gap-4 flex-wrap" style="color:var(--p);"><span>April 2026 — Present</span><span>Remote</span></div>
+        <div class="text-[1.1rem] font-bold mb-0.5" style="color:var(--text);">Frontend Developer</div>
+        <div class="text-[0.87rem] font-semibold mb-2" style="color:var(--p4);">RadinTech</div>
+        <div class="text-[0.86rem] leading-[1.7]" style="color:var(--muted);">Working as a Web Developer, building responsive and user-friendly websites using modern web technologies. Collaborating with the team to develop, maintain, and optimize client projects while focusing on clean code and performance.</div>
+        <ul class="flex flex-col gap-[0.4rem] mt-3">
+          <li class="flex items-start gap-2 text-[0.82rem] list-none" style="color:var(--text2);"><span style="color:var(--p);font-size:0.72rem;margin-top:2px;">→</span>Develop responsive websites using HTML, CSS, JavaScript, Tailwind CSS & WordPress.</li>
+          <li class="flex items-start gap-2 text-[0.82rem] list-none" style="color:var(--text2);"><span style="color:var(--p);font-size:0.72rem;margin-top:2px;">→</span>Customize and maintain WordPress websites for different clients.</li>
+          <li class="flex items-start gap-2 text-[0.82rem] list-none" style="color:var(--text2);"><span style="color:var(--p);font-size:0.72rem;margin-top:2px;">→</span>Optimize website performance, responsiveness, and user experience.</li>
+          <li class="flex items-start gap-2 text-[0.82rem] list-none" style="color:var(--text2);"><span style="color:var(--p);font-size:0.72rem;margin-top:2px;">→</span>Collaborate with designers and developers to deliver high-quality projects.</li>
+        </ul>
+        <div class="flex flex-wrap gap-[0.4rem] mt-3">
+          <span class="px-[0.8rem] py-[0.28rem] border rounded-full text-[0.75rem] inline-block" style="border-color:var(--border);color:var(--p);background:rgba(147,51,234,0.07);">HTML</span>
+          <span class="px-[0.8rem] py-[0.28rem] border rounded-full text-[0.75rem] inline-block" style="border-color:var(--border);color:var(--p);background:rgba(147,51,234,0.07);">CSS</span>
+          <span class="px-[0.8rem] py-[0.28rem] border rounded-full text-[0.75rem] inline-block" style="border-color:var(--border);color:var(--p);background:rgba(147,51,234,0.07);">JavaScript</span>
+          <span class="px-[0.8rem] py-[0.28rem] border rounded-full text-[0.75rem] inline-block" style="border-color:var(--border);color:var(--p);background:rgba(147,51,234,0.07);">Tailwind CSS</span>
+          <span class="px-[0.8rem] py-[0.28rem] border rounded-full text-[0.75rem] inline-block" style="border-color:var(--border);color:var(--p);background:rgba(147,51,234,0.07);">WordPress</span>
+        </div>
+      </div>
+
+      <div class="tl-item reveal-right relative mb-12" style="transition-delay:0.1s;">
+        <div class="tl-dot absolute rounded-full border-[2.5px]" style="left:-2.8rem;top:4px;width:18px;height:18px;background:linear-gradient(135deg,var(--p3),var(--p));border-color:var(--bg);box-shadow:0 0 14px rgba(147,51,234,0.55);"></div>
+        <div class="w-10 h-10 rounded-[10px] border flex items-center justify-center text-[1.3rem] mb-3" style="border-color:var(--border);background:var(--bg3);">🚀</div>
+        <div class="font-mono text-[0.68rem] mb-1 flex gap-4 flex-wrap" style="color:var(--p);"><span>2025 — 3Month</span><span>Dhaka, BD</span></div>
+        <div class="text-[1.1rem] font-bold mb-0.5" style="color:var(--text);">MERN Stack Developer Intern</div>
+        <div class="text-[0.87rem] font-semibold mb-2" style="color:var(--p4);">BD Calling Academy</div>
+        <div class="text-[0.86rem] leading-[1.7]" style="color:var(--muted);">Completed a 3-month MERN Stack internship, where I learned frontend web development through hands-on projects and real-world development practices.</div>
+        <ul class="flex flex-col gap-[0.4rem] mt-3">
+          <li class="flex items-start gap-2 text-[0.82rem] list-none" style="color:var(--text2);"><span style="color:var(--p);font-size:0.72rem;margin-top:2px;">→</span>Built responsive frontend interfaces using React and Tailwind CSS.</li>
+          <li class="flex items-start gap-2 text-[0.82rem] list-none" style="color:var(--text2);"><span style="color:var(--p);font-size:0.72rem;margin-top:2px;">→</span>Integrated REST APIs and practiced frontend application development.</li>
+          <li class="flex items-start gap-2 text-[0.82rem] list-none" style="color:var(--text2);"><span style="color:var(--p);font-size:0.72rem;margin-top:2px;">→</span>Strengthened problem-solving and Git/GitHub workflow skills.</li>
+        </ul>
+        <div class="flex flex-wrap gap-[0.4rem] mt-3">
+          <span class="px-[0.8rem] py-[0.28rem] border rounded-full text-[0.75rem] inline-block" style="border-color:var(--border);color:var(--p);background:rgba(147,51,234,0.07);">React</span>
+          <span class="px-[0.8rem] py-[0.28rem] border rounded-full text-[0.75rem] inline-block" style="border-color:var(--border);color:var(--p);background:rgba(147,51,234,0.07);">React js</span>
+          <span class="px-[0.8rem] py-[0.28rem] border rounded-full text-[0.75rem] inline-block" style="border-color:var(--border);color:var(--p);background:rgba(147,51,234,0.07);">Node.js</span>
+          <span class="px-[0.8rem] py-[0.28rem] border rounded-full text-[0.75rem] inline-block" style="border-color:var(--border);color:var(--p);background:rgba(147,51,234,0.07);">JavaScript</span>
+        </div>
+      </div>
+
+      <div class="tl-item reveal-right relative mb-12" style="transition-delay:0.15s;">
+        <div class="tl-dot absolute rounded-full border-[2.5px]" style="left:-2.8rem;top:4px;width:18px;height:18px;background:linear-gradient(135deg,var(--p3),var(--p));border-color:var(--bg);box-shadow:0 0 14px rgba(147,51,234,0.55);"></div>
+        <div class="w-10 h-10 rounded-[10px] border flex items-center justify-center text-[1.3rem] mb-3" style="border-color:var(--border);background:var(--bg3);">💡</div>
+        <div class="font-mono text-[0.68rem] mb-1 flex gap-4 flex-wrap" style="color:var(--p);"><span>2025 —3 Month </span><span>Onsite</span></div>
+        <div class="text-[1.1rem] font-bold mb-0.5" style="color:var(--text);">WordPress Developer</div>
+        <div class="text-[0.87rem] font-semibold mb-2" style="color:var(--p4);">TrustDevs</div>
+        <div class="text-[0.86rem] leading-[1.7]" style="color:var(--muted);">Worked on WordPress website development and customization for client projects.</div>
+        <ul class="flex flex-col gap-[0.4rem] mt-3">
+          <li class="flex items-start gap-2 text-[0.82rem] list-none" style="color:var(--text2);"><span style="color:var(--p);font-size:0.72rem;margin-top:2px;">→</span>Customized WordPress themes and layouts.</li>
+          <li class="flex items-start gap-2 text-[0.82rem] list-none" style="color:var(--text2);"><span style="color:var(--p);font-size:0.72rem;margin-top:2px;">→</span>Managed plugins and website content.</li>
+          <li class="flex items-start gap-2 text-[0.82rem] list-none" style="color:var(--text2);"><span style="color:var(--p);font-size:0.72rem;margin-top:2px;">→</span>Improved website responsiveness and performance.</li>
+          <li class="flex items-start gap-2 text-[0.82rem] list-none" style="color:var(--text2);"><span style="color:var(--p);font-size:0.72rem;margin-top:2px;">→</span>Fixed bugs and maintained existing websites.</li>
+        </ul>
+        <div class="flex flex-wrap gap-[0.4rem] mt-3">
+          <span class="px-[0.8rem] py-[0.28rem] border rounded-full text-[0.75rem] inline-block" style="border-color:var(--border);color:var(--p);background:rgba(147,51,234,0.07);">WordPress</span>
+          <span class="px-[0.8rem] py-[0.28rem] border rounded-full text-[0.75rem] inline-block" style="border-color:var(--border);color:var(--p);background:rgba(147,51,234,0.07);">Elementor</span>
+          <span class="px-[0.8rem] py-[0.28rem] border rounded-full text-[0.75rem] inline-block" style="border-color:var(--border);color:var(--p);background:rgba(147,51,234,0.07);">HTML</span>
+          <span class="px-[0.8rem] py-[0.28rem] border rounded-full text-[0.75rem] inline-block" style="border-color:var(--border);color:var(--p);background:rgba(147,51,234,0.07);">CSS</span>
+        </div>
+      </div>
+
+      <div class="tl-item reveal-right relative mb-12" style="transition-delay:0.2s;">
+        <div class="tl-dot absolute rounded-full border-[2.5px]" style="left:-2.8rem;top:4px;width:18px;height:18px;background:linear-gradient(135deg,var(--p3),var(--p));border-color:var(--bg);box-shadow:0 0 14px rgba(147,51,234,0.55);"></div>
+        <div class="w-10 h-10 rounded-[10px] border flex items-center justify-center text-[1.3rem] mb-3" style="border-color:var(--border);background:var(--bg3);">🏢</div>
+        <div class="font-mono text-[0.68rem] mb-1 flex gap-4 flex-wrap" style="color:var(--p);"><span>2024 — 1Year</span><span>Course</span></div>
+        <div class="text-[1.1rem] font-bold mb-0.5" style="color:var(--text);">Frontend Web Development</div>
+        <div class="text-[0.87rem] font-semibold mb-2" style="color:var(--p4);">TrustDevs</div>
+        <div class="text-[0.86rem] leading-[1.7]" style="color:var(--muted);">Completed a one-year professional training in Frontend Web Development, gaining strong knowledge of modern web technologies and responsive website development.</div>
+        <ul class="flex flex-col gap-[0.4rem] mt-3">
+          <li class="flex items-start gap-2 text-[0.82rem] list-none" style="color:var(--text2);"><span style="color:var(--p);font-size:0.72rem;margin-top:2px;">→</span>Learned HTML5, CSS3, JavaScript, Tailwind CSS, and responsive design.</li>
+          <li class="flex items-start gap-2 text-[0.82rem] list-none" style="color:var(--text2);"><span style="color:var(--p);font-size:0.72rem;margin-top:2px;">→</span>Built multiple practice projects and portfolio websites.</li>
+          <li class="flex items-start gap-2 text-[0.82rem] list-none" style="color:var(--text2);"><span style="color:var(--p);font-size:0.72rem;margin-top:2px;">→</span>Gained experience with Git & GitHub for version control.</li>
+          <li class="flex items-start gap-2 text-[0.82rem] list-none" style="color:var(--text2);"><span style="color:var(--p);font-size:0.72rem;margin-top:2px;">→</span>Focused on writing clean, reusable, and maintainable code.</li>
+        </ul>
+        <div class="flex flex-wrap gap-[0.4rem] mt-3">
+          <span class="px-[0.8rem] py-[0.28rem] border rounded-full text-[0.75rem] inline-block" style="border-color:var(--border);color:var(--p);background:rgba(147,51,234,0.07);">HTML5</span>
+          <span class="px-[0.8rem] py-[0.28rem] border rounded-full text-[0.75rem] inline-block" style="border-color:var(--border);color:var(--p);background:rgba(147,51,234,0.07);">CSS3</span>
+          <span class="px-[0.8rem] py-[0.28rem] border rounded-full text-[0.75rem] inline-block" style="border-color:var(--border);color:var(--p);background:rgba(147,51,234,0.07);">JavaScript</span>
+          <span class="px-[0.8rem] py-[0.28rem] border rounded-full text-[0.75rem] inline-block" style="border-color:var(--border);color:var(--p);background:rgba(147,51,234,0.07);">Tailwind CSS</span>
+          <span class="px-[0.8rem] py-[0.28rem] border rounded-full text-[0.75rem] inline-block" style="border-color:var(--border);color:var(--p);background:rgba(147,51,234,0.07);">Git</span>
+        </div>
+      </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="glow-divider"></div>
+
+<!-- ==========================================
+     EDUCATION SECTION
+========================================== -->
+<section id="education" class="relative z-[1]" style="background:linear-gradient(180deg,var(--bg) 0%,var(--bg2) 100%);">
+  <div class="px-12 py-[6.5rem] max-w-[1200px] mx-auto">
+    <div class="reveal">
+      <div class="section-label font-mono text-[0.68rem] tracking-[0.22em] uppercase mb-3 flex items-center gap-3" style="color:var(--p);">Academic Background</div>
+      <h2 class="text-[clamp(1.8rem,4vw,3rem)] font-bold leading-[1.15] tracking-[-0.025em] mb-3" style="color:var(--text);">How I learned.</h2>
+    </div>
+    <div class="grid mt-12 gap-[1.4rem]" style="grid-template-columns:repeat(auto-fit,minmax(270px,1fr));">
+      <div class="edu-card reveal relative overflow-hidden rounded-[14px] p-[1.8rem] border transition-all duration-300 hover:-translate-y-1" style="background:var(--card);border-color:var(--border);transition-delay:0.05s;">
+        <div class="text-[2rem] mb-[0.9rem]">🎓</div>
+        <div class="text-[0.97rem] font-bold mb-1" style="color:var(--text);">Diploma in Computer Science &amp; Technology</div>
+        <div class="text-[0.83rem] font-semibold mb-0.5" style="color:var(--p);">Rajshahi Mohila Polytechnic Institute, Rajshahi</div>
+        <div class="font-mono text-[0.68rem] mb-3" style="color:var(--muted);">2022 — 2026</div>
+        <div class="text-[0.8rem] leading-[1.65]" style="color:var(--muted);">CGPA: 3.62 / 4.00 · Pursuing a Diploma in Computer Science & Technology, focusing on software development, web technologies, and programming while building practical skills through academic projects.</div>
+      </div>
+      <div class="edu-card reveal relative overflow-hidden rounded-[14px] p-[1.8rem] border transition-all duration-300 hover:-translate-y-1" style="background:var(--card);border-color:var(--border);transition-delay:0.1s;">
+        <div class="text-[2rem] mb-[0.9rem]">⚡</div>
+        <div class="text-[0.97rem] font-bold mb-1" style="color:var(--text);">Complete Web Development Course</div>
+        <div class="text-[0.83rem] font-semibold mb-0.5" style="color:var(--p);">Programming Hero</div>
+        <div class="font-mono text-[0.68rem] mb-3" style="color:var(--muted);">2025 — 6 Month</div>
+        <div class="text-[0.8rem] leading-[1.65]" style="color:var(--muted);">Completed a comprehensive web development course covering HTML5, CSS3, JavaScript, Tailwind CSS, React, Node.js, Express.js, MongoDB, and Git. Built multiple responsive full-stack projects using modern development practices.</div>
+      </div>
+      <div class="edu-card reveal relative overflow-hidden rounded-[14px] p-[1.8rem] border transition-all duration-300 hover:-translate-y-1" style="background:var(--card);border-color:var(--border);transition-delay:0.15s;">
+        <div class="text-[2rem] mb-[0.9rem]">🧩</div>
+        <div class="text-[0.97rem] font-bold mb-1" style="color:var(--text);">Frontend &amp; WordPress Development</div>
+        <div class="text-[0.83rem] font-semibold mb-0.5" style="color:var(--p);">TrustDevs</div>
+        <div class="font-mono text-[0.68rem] mb-3" style="color:var(--muted);">2024 — 2025</div>
+        <div class="text-[0.8rem] leading-[1.65]" style="color:var(--muted);">Expanded my skills through hands-on practice in Frontend Development and WordPress. Developed responsive websites, customized WordPress themes, and continuously improved problem-solving and modern web development skills through real-world projects. &amp; LeetCode.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="glow-divider"></div>
+
+
+
+
+<!-- ==========================================
+     CLIENT REVIEWS SECTION
+========================================== -->
+<section id="reviews" class="relative z-[1]" style="background:linear-gradient(180deg,var(--bg2) 0%,var(--bg) 100%);">
+  <div class="px-12 py-[6.5rem] max-w-[1200px] mx-auto">
+    <div class="reveal">
+      <div class="section-label font-mono text-[0.68rem] tracking-[0.22em] uppercase mb-3 flex items-center gap-3" style="color:var(--p);">Client Reviews</div>
+      <h2 class="text-[clamp(1.8rem,4vw,3rem)] font-bold leading-[1.15] tracking-[-0.025em] mb-3" style="color:var(--text);">What clients say.</h2>
+      <p class="text-[0.95rem] leading-[1.75] max-w-[520px]" style="color:var(--muted);">Real feedback from real people I've had the pleasure of working with.</p>
+    </div>
+
+
+    <div class="overflow-hidden relative mt-14">
+      <div class="flex gap-6" id="reviewsTrack">
+
+        <div class="review-card reveal flex-shrink-0 w-[360px] relative overflow-hidden rounded-[16px] p-8 border transition-all duration-300 hover:-translate-y-1" style="background:var(--card);border-color:var(--border);transition-delay:0.05s;">
+          <div class="flex gap-1 mb-[0.9rem] text-[0.85rem]" style="color:#f59e0b;">★★★★★</div>
+          <div class="text-[0.87rem] leading-[1.75] mb-5 italic" style="color:var(--text2);">"Farzana developed our business website exactly as we imagined. The design is clean, responsive, and loads quickly. She was professional throughout the entire project."</div>
+          <div class="flex items-center gap-3">
+            <img src="https://i.pravatar.cc/100?img=47" alt="Sarah Johnson" class="w-[42px] h-[42px] rounded-full object-cover flex-shrink-0 border-2" style="border-color:var(--border);">
+            <div>
+              <div class="text-[0.88rem] font-bold" style="color:var(--text);">Sarah Johnson</div>
+              <div class="text-[0.73rem]" style="color:var(--muted);">CTO, NexaMetrics Inc. · USA</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="review-card reveal flex-shrink-0 w-[360px] relative overflow-hidden rounded-[16px] p-8 border transition-all duration-300 hover:-translate-y-1" style="background:var(--card);border-color:var(--border);transition-delay:0.1s;">
+          <div class="flex gap-1 mb-[0.9rem] text-[0.85rem]" style="color:#f59e0b;">★★★★★</div>
+          <div class="text-[0.87rem] leading-[1.75] mb-5 italic" style="color:var(--text2);">"Working with Farzana was smooth from start to finish. She converted our Figma design into a beautiful, responsive website with great attention to detail."</div>
+          <div class="flex items-center gap-3">
+            <img src="https://i.pravatar.cc/100?img=12" alt="Mohammed Al-Rashid" class="w-[42px] h-[42px] rounded-full object-cover flex-shrink-0 border-2" style="border-color:var(--border);">
+            <div>
+              <div class="text-[0.88rem] font-bold" style="color:var(--text);">Mohammed Al-Rashid</div>
+              <div class="text-[0.73rem]" style="color:var(--muted);">Product Manager, TechHive · UAE</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="review-card reveal flex-shrink-0 w-[360px] relative overflow-hidden rounded-[16px] p-8 border transition-all duration-300 hover:-translate-y-1" style="background:var(--card);border-color:var(--border);transition-delay:0.15s;">
+          <div class="flex gap-1 mb-[0.9rem] text-[0.85rem]" style="color:#f59e0b;">★★★★★</div>
+          <div class="text-[0.87rem] leading-[1.75] mb-5 italic" style="color:var(--text2);">"She has strong HTML, CSS, Tailwind CSS, and JavaScript skills. The final website looked modern, worked perfectly on all devices, and was delivered on time."</div>
+          <div class="flex items-center gap-3">
+            <img src="https://i.pravatar.cc/100?img=45" alt="Lisa Kim" class="w-[42px] h-[42px] rounded-full object-cover flex-shrink-0 border-2" style="border-color:var(--border);">
+            <div>
+              <div class="text-[0.88rem] font-bold" style="color:var(--text);">Lisa Kim</div>
+              <div class="text-[0.73rem]" style="color:var(--muted);">Founder, BloomStore · South Korea</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="review-card reveal flex-shrink-0 w-[360px] relative overflow-hidden rounded-[16px] p-8 border transition-all duration-300 hover:-translate-y-1" style="background:var(--card);border-color:var(--border);transition-delay:0.2s;">
+          <div class="flex gap-1 mb-[0.9rem] text-[0.85rem]" style="color:#f59e0b;">★★★★★</div>
+          <div class="text-[0.87rem] leading-[1.75] mb-5 italic" style="color:var(--text2);">"Farzana communicated clearly, implemented every requested change quickly, and delivered a polished website. I would happily work with her again."</div>
+          <div class="flex items-center gap-3">
+            <img src="https://i.pravatar.cc/100?img=33" alt="Raj Patel" class="w-[42px] h-[42px] rounded-full object-cover flex-shrink-0 border-2" style="border-color:var(--border);">
+            <div>
+              <div class="text-[0.88rem] font-bold" style="color:var(--text);">Raj Patel</div>
+              <div class="text-[0.73rem]" style="color:var(--muted);">CEO, DataPilot · India</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="review-card reveal flex-shrink-0 w-[360px] relative overflow-hidden rounded-[16px] p-8 border transition-all duration-300 hover:-translate-y-1" style="background:var(--card);border-color:var(--border);transition-delay:0.25s;">
+          <div class="flex gap-1 mb-[0.9rem] text-[0.85rem]" style="color:#f59e0b;">★★★★★</div>
+          <div class="text-[0.87rem] leading-[1.75] mb-5 italic" style="color:var(--text2);">"An enthusiastic and dedicated developer who genuinely cares about quality. Her clean code and responsive layouts made our project a success."</div>
+          <div class="flex items-center gap-3">
+            <img src="https://i.pravatar.cc/100?img=15" alt="Thomas Chen" class="w-[42px] h-[42px] rounded-full object-cover flex-shrink-0 border-2" style="border-color:var(--border);">
+            <div>
+              <div class="text-[0.88rem] font-bold" style="color:var(--text);">Thomas Chen</div>
+              <div class="text-[0.73rem]" style="color:var(--muted);">Design Lead, Orion Studio · UK</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+    <div class="flex gap-3 mt-8 justify-center">
+      <button id="revPrev" class="w-9 h-9 rounded-full border flex items-center justify-center text-[0.9rem] transition-all duration-300 hover:scale-105" style="border-color:var(--border);background:var(--bg3);cursor:none;color:var(--muted);">←</button>
+      <button id="revNext" class="w-9 h-9 rounded-full border flex items-center justify-center text-[0.9rem] transition-all duration-300 hover:scale-105" style="border-color:var(--border);background:var(--bg3);cursor:none;color:var(--muted);">→</button>
+    </div>
+  </div>
+</section>
+
+<div class="glow-divider"></div>
+
+<!-- ==========================================
+     CONTACT SECTION
+========================================== -->
+<section id="contact" class="relative z-[1]" style="background:linear-gradient(180deg,var(--bg2) 0%,var(--bg) 100%);">
+  <div class="px-12 py-[6.5rem] max-w-[1200px] mx-auto">
+    <div class="reveal text-center max-w-[580px] mx-auto mb-16">
+      <div class="section-label font-mono text-[0.68rem] tracking-[0.22em] uppercase mb-3 flex items-center gap-3 justify-center" style="color:var(--p);">Get In Touch</div>
+      <h2 class="text-[clamp(2rem,5vw,3.4rem)] font-bold leading-[1.15] tracking-[-0.025em] mb-3" style="color:var(--text);">Let's build something<br><span class="grad-text">remarkable together.</span></h2>
+      <p class="text-[0.95rem] leading-[1.75] max-w-[520px] mx-auto" style="color:var(--muted);">Available for freelance projects, full-time roles, and open source collaborations. My inbox is always open.</p>
+    </div>
+    <div class="contact-grid grid gap-16 items-start mt-14" style="grid-template-columns:1fr 1.3fr;">
+      <div class="reveal-left">
+        <div class="flex items-start gap-[0.9rem] mb-[1.6rem]">
+          <div class="w-11 h-11 rounded-[10px] flex items-center justify-center text-[1.1rem] flex-shrink-0 border" style="background:rgba(147,51,234,0.1);border-color:rgba(147,51,234,0.2);">📧</div>
+          <div>
+            <div class="text-[0.68rem] uppercase tracking-[0.09em] mb-0.5 font-mono" style="color:var(--muted);">Email</div>
+            <div class="text-[0.9rem]" style="color:var(--text);">yesmin21212@gmail.com</div>
+          </div>
+        </div>
+        <div class="flex items-start gap-[0.9rem] mb-[1.6rem]">
+          <div class="w-11 h-11 rounded-[10px] flex items-center justify-center text-[1.1rem] flex-shrink-0 border" style="background:rgba(147,51,234,0.1);border-color:rgba(147,51,234,0.2);">📍</div>
+          <div>
+            <div class="text-[0.68rem] uppercase tracking-[0.09em] mb-0.5 font-mono" style="color:var(--muted);">Location</div>
+            <div class="text-[0.9rem]" style="color:var(--text);">Bogura, Bangladesh</div>
+          </div>
+        </div>
+        <div class="flex items-start gap-[0.9rem] mb-[1.6rem]">
+          <div class="w-11 h-11 rounded-[10px] flex items-center justify-center text-[1.1rem] flex-shrink-0 border" style="background:rgba(147,51,234,0.1);border-color:rgba(147,51,234,0.2);">⏰</div>
+          <div>
+            <div class="text-[0.68rem] uppercase tracking-[0.09em] mb-0.5 font-mono" style="color:var(--muted);">Response Time</div>
+            <div class="text-[0.9rem]" style="color:var(--text);">Within 24 hours</div>
+          </div>
+        </div>
+        <div class="flex items-start gap-[0.9rem] mb-[1.6rem]">
+          <div class="w-11 h-11 rounded-[10px] flex items-center justify-center text-[1.1rem] flex-shrink-0 border" style="background:rgba(147,51,234,0.1);border-color:rgba(147,51,234,0.2);">💼</div>
+          <div>
+            <div class="text-[0.68rem] uppercase tracking-[0.09em] mb-0.5 font-mono" style="color:var(--muted);">Availability</div>
+            <div class="text-[0.9rem]" style="color:#4ade80;">● Open to opportunities</div>
+          </div>
+        </div>
+        <div class="flex gap-3 flex-wrap mt-8">
+          <a class="w-11 h-11 rounded-[10px] border flex items-center justify-center no-underline transition-all duration-300 hover:-translate-y-0.5 hover:border-purple-400" href="https://github.com/Farzanayesmin21" title="GitHub" target="_blank" style="border-color:var(--border);background:var(--bg3);color:var(--muted);">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5C5.73.5.5 5.73.5 12c0 5.08 3.29 9.39 7.86 10.91.57.1.78-.25.78-.55v-1.93c-3.2.7-3.87-1.36-3.87-1.36-.53-1.34-1.29-1.7-1.29-1.7-1.05-.72.08-.7.08-.7 1.16.08 1.77 1.2 1.77 1.2 1.03 1.76 2.7 1.25 3.36.95.1-.74.4-1.25.73-1.54-2.56-.29-5.25-1.28-5.25-5.7 0-1.26.45-2.29 1.19-3.1-.12-.29-.52-1.46.11-3.05 0 0 .98-.31 3.2 1.18a11.1 11.1 0 0 1 5.83 0c2.22-1.49 3.2-1.18 3.2-1.18.63 1.59.23 2.76.11 3.05.74.81 1.19 1.84 1.19 3.1 0 4.43-2.7 5.4-5.27 5.69.42.36.78 1.07.78 2.17v3.22c0 .3.21.66.79.55A11.5 11.5 0 0 0 23.5 12C23.5 5.73 18.27.5 12 .5Z"/></svg>
+          </a>
+          <a class="w-11 h-11 rounded-[10px] border flex items-center justify-center no-underline transition-all duration-300 hover:-translate-y-0.5 hover:border-purple-400" href="https://www.linkedin.com/in/farzanayesmin21/" title="LinkedIn" target="_blank" style="border-color:var(--border);background:var(--bg3);color:var(--muted);">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M20.45 20.45h-3.55v-5.57c0-1.33-.02-3.03-1.85-3.03-1.85 0-2.14 1.45-2.14 2.94v5.66H9.36V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.38-1.85 3.61 0 4.28 2.38 4.28 5.47v6.27ZM5.34 7.43a2.06 2.06 0 1 1 0-4.12 2.06 2.06 0 0 1 0 4.12ZM7.12 20.45H3.56V9h3.56v11.45ZM22.22 0H1.77C.79 0 0 .77 0 1.73v20.54C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.73V1.73C24 .77 23.2 0 22.22 0Z"/></svg>
+          </a>
+        </div>
+      </div>
+      <div class="reveal-right rounded-[18px] p-[2.2rem] border" style="background:var(--card);border-color:var(--border);">
+        <div class="grid grid-cols-2 gap-4 mb-5 form-row">
+          <div>
+            <label class="block text-[0.72rem] uppercase tracking-[0.06em] mb-[0.45rem] font-mono" style="color:var(--muted);">Your Name</label>
+            <input id="cName" class="w-full rounded-[9px] px-4 py-[0.78rem] text-[0.88rem] border outline-none transition-all duration-300" type="text" placeholder="name" style="background:rgba(147,51,234,0.05);border-color:var(--border);color:var(--text);font-family:'Space Grotesk',sans-serif;">
+          </div>
+          <div>
+            <label class="block text-[0.72rem] uppercase tracking-[0.06em] mb-[0.45rem] font-mono" style="color:var(--muted);">Email</label>
+            <input id="cEmail" class="w-full rounded-[9px] px-4 py-[0.78rem] text-[0.88rem] border outline-none transition-all duration-300" type="email" placeholder="email" style="background:rgba(147,51,234,0.05);border-color:var(--border);color:var(--text);font-family:'Space Grotesk',sans-serif;">
+          </div>
+        </div>
+        <div class="mb-5">
+          <label class="block text-[0.72rem] uppercase tracking-[0.06em] mb-[0.45rem] font-mono" style="color:var(--muted);">Subject</label>
+          <input id="cSubject" class="w-full rounded-[9px] px-4 py-[0.78rem] text-[0.88rem] border outline-none transition-all duration-300" type="text" placeholder="Project Inquiry / Collaboration / ..." style="background:rgba(147,51,234,0.05);border-color:var(--border);color:var(--text);font-family:'Space Grotesk',sans-serif;">
+        </div>
+        <div class="mb-5">
+          <label class="block text-[0.72rem] uppercase tracking-[0.06em] mb-[0.45rem] font-mono" style="color:var(--muted);">Message</label>
+          <textarea id="cMessage" class="w-full rounded-[9px] px-4 py-[0.78rem] text-[0.88rem] border outline-none transition-all duration-300 resize-none min-h-[120px]" placeholder="Tell me about your project, goals, and timeline..." style="background:rgba(147,51,234,0.05);border-color:var(--border);color:var(--text);font-family:'Space Grotesk',sans-serif;"></textarea>
+        </div>
+        <button id="sendBtn" type="button" class="w-full justify-center px-[1.9rem] py-[0.8rem] rounded-lg text-[0.9rem] font-semibold text-white border-0 inline-flex items-center gap-2 transition-all duration-300 hover:-translate-y-0.5" style="background:linear-gradient(135deg,var(--p2),var(--p3));box-shadow:0 0 28px rgba(147,51,234,0.32);cursor:none;">Send Message ✦</button>
+        <p id="formNote" class="text-[0.74rem] mt-3" style="color:var(--muted);">Clicking "Send Message" opens WhatsApp with your message pre-filled.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="px-12 py-10 text-center border-t" style="border-color:var(--border);">
+  <div class="max-w-[1200px] mx-auto flex items-center justify-between flex-wrap gap-4">
+    <div class="font-mono text-[0.95rem]" style="color:var(--p);">&lt;Farzana.dev /&gt;</div>
+    <div class="text-[0.78rem]" style="color:var(--muted);">Designed &amp; coded with ♥ by <span style="color:var(--p);">Farzana Yesmin</span> · 2026</div>
+    <div class="flex items-center gap-4">
+      <a href="https://github.com/Farzanayesmin21" target="_blank" title="GitHub" class="w-9 h-9 rounded-full border flex items-center justify-center transition-all duration-300 hover:-translate-y-0.5 hover:border-purple-400" style="border-color:var(--border);background:var(--bg3);color:var(--muted);">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5C5.73.5.5 5.73.5 12c0 5.08 3.29 9.39 7.86 10.91.57.1.78-.25.78-.55v-1.93c-3.2.7-3.87-1.36-3.87-1.36-.53-1.34-1.29-1.7-1.29-1.7-1.05-.72.08-.7.08-.7 1.16.08 1.77 1.2 1.77 1.2 1.03 1.76 2.7 1.25 3.36.95.1-.74.4-1.25.73-1.54-2.56-.29-5.25-1.28-5.25-5.7 0-1.26.45-2.29 1.19-3.1-.12-.29-.52-1.46.11-3.05 0 0 .98-.31 3.2 1.18a11.1 11.1 0 0 1 5.83 0c2.22-1.49 3.2-1.18 3.2-1.18.63 1.59.23 2.76.11 3.05.74.81 1.19 1.84 1.19 3.1 0 4.43-2.7 5.4-5.27 5.69.42.36.78 1.07.78 2.17v3.22c0 .3.21.66.79.55A11.5 11.5 0 0 0 23.5 12C23.5 5.73 18.27.5 12 .5Z"/></svg>
+      </a>
+      <a href="https://www.linkedin.com/" target="_blank" title="LinkedIn" class="w-9 h-9 rounded-full border flex items-center justify-center transition-all duration-300 hover:-translate-y-0.5 hover:border-purple-400" style="border-color:var(--border);background:var(--bg3);color:var(--muted);">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M20.45 20.45h-3.55v-5.57c0-1.33-.02-3.03-1.85-3.03-1.85 0-2.14 1.45-2.14 2.94v5.66H9.36V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.38-1.85 3.61 0 4.28 2.38 4.28 5.47v6.27ZM5.34 7.43a2.06 2.06 0 1 1 0-4.12 2.06 2.06 0 0 1 0 4.12ZM7.12 20.45H3.56V9h3.56v11.45ZM22.22 0H1.77C.79 0 0 .77 0 1.73v20.54C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.73V1.73C24 .77 23.2 0 22.22 0Z"/></svg>
+      </a>
+    </div>
+    <div class="flex gap-6">
+      <a href="#home" class="text-[0.78rem] no-underline transition-colors duration-200 hover:text-purple-500" style="color:var(--muted);">Top</a>
+      <a href="#projects" class="text-[0.78rem] no-underline transition-colors duration-200 hover:text-purple-500" style="color:var(--muted);">Work</a>
+      <a href="#contact" class="text-[0.78rem] no-underline transition-colors duration-200 hover:text-purple-500" style="color:var(--muted);">Contact</a>
+    </div>
+  </div>
+</footer>
+
+<!-- ==========================================
+     JAVASCRIPT (unchanged)
+========================================== -->
+<script>
+/* ---- CURSOR ---- */
+const cursor = document.getElementById('cursor');
+const ring   = document.getElementById('cursor-ring');
+const aura   = document.getElementById('mouse-aura');
+let mx=0,my=0,rx=0,ry=0;
+
+document.addEventListener('mousemove', e => {
+  mx=e.clientX; my=e.clientY;
+  cursor.style.left=mx+'px'; cursor.style.top=my+'px';
+  aura.style.left=mx+'px';   aura.style.top=my+'px';
+});
+(function animRing(){
+  rx+=(mx-rx)*0.11; ry+=(my-ry)*0.11;
+  ring.style.left=rx+'px'; ring.style.top=ry+'px';
+  requestAnimationFrame(animRing);
+})();
+document.querySelectorAll('a,button,.skill-cat-card,.project-card,.edu-card,.cert-card,.review-card,.service-card').forEach(el=>{
+  el.addEventListener('mouseenter',()=>document.body.classList.add('cursor-grow'));
+  el.addEventListener('mouseleave',()=>document.body.classList.remove('cursor-grow'));
+});
+
+/* ---- THEME TOGGLE ---- */
+const themeBtn = document.getElementById('themeToggle');
+const html = document.documentElement;
+let dark = true;
+themeBtn.addEventListener('click', () => {
+  dark = !dark;
+  html.setAttribute('data-theme', dark ? 'dark' : 'light');
+  themeBtn.textContent = dark ? '🌙' : '☀️';
+});
+
+/* ---- NAVBAR ---- */
+const navbar = document.getElementById('navbar');
+const hamburger = document.getElementById('hamburger');
+const mobileMenu = document.getElementById('mobileMenu');
+window.addEventListener('scroll', () => {
+  navbar.classList.toggle('scrolled', window.scrollY > 40);
+  updateActiveNav();
+});
+hamburger.addEventListener('click', () => {
+  mobileMenu.classList.toggle('open');
+  hamburger.classList.toggle('open');
+});
+mobileMenu.querySelectorAll('a').forEach(a => {
+  a.addEventListener('click', () => {
+    mobileMenu.classList.remove('open');
+    hamburger.classList.remove('open');
+  });
+});
+
+/* Active nav link on scroll */
+const sections = document.querySelectorAll('section[id]');
+function updateActiveNav(){
+  let current='';
+  sections.forEach(sec => {
+    if(window.scrollY >= sec.offsetTop - 140) current = sec.id;
+  });
+  document.querySelectorAll('.nav-center a').forEach(a => {
+    a.classList.toggle('active', a.getAttribute('href')==='#'+current);
+    if(a.classList.contains('active')){
+      a.style.color='var(--text)';
+      a.style.background='var(--p2)';
+      a.style.boxShadow='0 0 16px rgba(147,51,234,0.4)';
+    } else {
+      a.style.color='var(--muted)';
+      a.style.background='';
+      a.style.boxShadow='';
+    }
+  });
+}
+
+/* ---- SMOOTH SCROLL ---- */
+document.querySelectorAll('a[href^="#"]').forEach(a => {
+  a.addEventListener('click', e => {
+    const href = a.getAttribute('href');
+    if(href==='#') return;
+    e.preventDefault();
+    const target = document.querySelector(href);
+    if(target) target.scrollIntoView({behavior:'smooth',block:'start'});
+  });
+});
+
+/* ---- REVEAL ON SCROLL ---- */
+const revEls = document.querySelectorAll('.reveal,.reveal-left,.reveal-right,.reveal-scale');
+const revObs = new IntersectionObserver(entries => {
+  entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('visible'); });
+}, {threshold:0.1});
+revEls.forEach(el => revObs.observe(el));
+
+/* ---- SKILL BARS ---- */
+const skillObs = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if(e.isIntersecting){
+      e.target.querySelectorAll('.skill-fill').forEach(f => { f.style.width = f.dataset.width+'%'; });
+    }
+  });
+}, {threshold:0.15});
+document.querySelectorAll('#skillsSection').forEach(s => skillObs.observe(s));
+
+/* ---- COUNTERS ---- */
+function countUp(el, target, dur=1800){
+  let s=null;
+  (function step(ts){
+    if(!s) s=ts;
+    const p = Math.min((ts-s)/dur, 1);
+    el.textContent = Math.floor(p*target);
+    if(p<1) requestAnimationFrame(step);
+    else el.textContent = target;
+  })(performance.now());
+}
+const cntObs = new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      e.target.querySelectorAll('[data-count]').forEach(wrap=>{
+        countUp(wrap.querySelector('.count-val'), parseInt(wrap.dataset.count));
+      });
+      cntObs.unobserve(e.target);
+    }
+  });
+},{threshold:0.5});
+document.querySelectorAll('#home').forEach(s=>cntObs.observe(s));
+
+/* ---- TYPING EFFECT ---- */
+const phrases = ['Building UIs that convert.','Crafting smooth animations.','Writing clean, typed code.','Turning Figma into React.','Optimizing Core Web Vitals.'];
+let pi=0, ci=0, del=false;
+const typEl = document.getElementById('typing-text');
+function type(){
+  const w = phrases[pi];
+  if(!del){
+    typEl.textContent = w.slice(0,++ci);
+    if(ci===w.length){ del=true; setTimeout(type,1800); return; }
+  } else {
+    typEl.textContent = w.slice(0,--ci);
+    if(ci===0){ del=false; pi=(pi+1)%phrases.length; setTimeout(type,400); return; }
+  }
+  setTimeout(type, del ? 45 : 80);
+}
+type();
+
+/* ---- PARALLAX ORBS ---- */
+window.addEventListener('mousemove', e => {
+  const x=(e.clientX/window.innerWidth-0.5)*18;
+  const y=(e.clientY/window.innerHeight-0.5)*18;
+  document.querySelector('.orb1').style.transform=`translate(${x}px,${y}px)`;
+  document.querySelector('.orb2').style.transform=`translate(${-x*.6}px,${-y*.6}px)`;
+});
+
+/* ---- REVIEWS CAROUSEL (with autoplay) ---- */
+let revOffset = 0;
+const track = document.getElementById('reviewsTrack');
+const cards = track.querySelectorAll('.review-card');
+const cardW = 360 + 24;
+const reviewsViewport = track.parentElement;
+function maxRevOffset(){
+  return Math.max(0, (cards.length - 1) * cardW - (reviewsViewport.offsetWidth - cardW));
+}
+function goToOffset(o){
+  revOffset = o;
+  track.style.transition = 'transform 0.5s cubic-bezier(0.4,0,0.2,1)';
+  track.style.transform = `translateX(-${revOffset}px)`;
+}
+document.getElementById('revNext').addEventListener('click', () => {
+  const max = maxRevOffset();
+  goToOffset(revOffset + cardW > max ? 0 : revOffset + cardW);
+});
+document.getElementById('revPrev').addEventListener('click', () => {
+  const max = maxRevOffset();
+  goToOffset(revOffset - cardW < 0 ? max : revOffset - cardW);
+});
+let reviewsAutoplay = setInterval(() => {
+  const max = maxRevOffset();
+  goToOffset(revOffset + cardW > max ? 0 : revOffset + cardW);
+}, 4000);
+reviewsViewport.addEventListener('mouseenter', () => clearInterval(reviewsAutoplay));
+reviewsViewport.addEventListener('mouseleave', () => {
+  reviewsAutoplay = setInterval(() => {
+    const max = maxRevOffset();
+    goToOffset(revOffset + cardW > max ? 0 : revOffset + cardW);
+  }, 4000);
+});
+
+/* ---- CONTACT FORM -> WHATSAPP ---- */
+const sendBtn = document.getElementById('sendBtn');
+const WHATSAPP_NUMBER = '8801755163729';
+sendBtn.addEventListener('click', () => {
+  const name = document.getElementById('cName').value.trim();
+  const email = document.getElementById('cEmail').value.trim();
+  const subject = document.getElementById('cSubject').value.trim();
+  const message = document.getElementById('cMessage').value.trim();
+  const note = document.getElementById('formNote');
+
+  if (!name || !message) {
+    note.textContent = 'Please fill in your name and message before sending.';
+    note.style.color = '#f87171';
+    return;
+  }
+
+  let text = `Hello Farzana, my name is ${name}.`;
+  if (subject) text += `\nSubject: ${subject}`;
+  text += `\nMessage: ${message}`;
+  if (email) text += `\nMy email: ${email}`;
+
+  const waUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(text)}`;
+  window.open(waUrl, '_blank');
+  note.textContent = 'Opening WhatsApp...';
+  note.style.color = 'var(--muted)';
+});
+
+/* ---- CV DOWNLOAD BUTTON ---- */
+const cvBtn = document.querySelector('.cv-download-btn');
+if (cvBtn) {
+  cvBtn.addEventListener('click', async function(e) {
+    e.preventDefault();
+    if (this.classList.contains('downloading')) return;
+
+    this.classList.add('downloading');
+    const textEl = this.querySelector('.cv-btn-text');
+    const iconEl = this.querySelector('.cv-btn-icon i');
+    const origText = textEl.textContent;
+
+    textEl.textContent = 'Downloading';
+    iconEl.className = 'fa-solid fa-spinner fa-spin';
+
+    try {
+      const cvUrl = this.getAttribute('href');
+      const response = await fetch(cvUrl);
+      if (!response.ok) throw new Error('File not found');
+      const blob = await response.blob();
+      const blobUrl = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = blobUrl;
+      link.download = this.getAttribute('download') || 'Farzana-Yesmin-CV.pdf';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      setTimeout(() => URL.revokeObjectURL(blobUrl), 1000);
+
+      textEl.textContent = 'Downloaded!';
+      iconEl.className = 'fa-solid fa-check';
+      this.style.borderColor = '#4ade80';
+      this.style.color = '#4ade80';
+    } catch(err) {
+      // Fallback: direct link open
+      window.open(this.getAttribute('href'), '_blank');
+      textEl.textContent = 'Opened!';
+      iconEl.className = 'fa-solid fa-check';
+      this.style.borderColor = '#4ade80';
+      this.style.color = '#4ade80';
+    }
+
+    setTimeout(() => {
+      this.classList.remove('downloading');
+      textEl.textContent = origText;
+      iconEl.className = 'fa-solid fa-download';
+      this.style.borderColor = '';
+      this.style.color = '';
+    }, 3000);
+  });
+}
+
+
+document.querySelectorAll('.filter-btn').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('.filter-btn').forEach(b=>{
+      b.classList.remove('active');
+      b.style.background='transparent';
+      b.style.color='var(--muted)';
+      b.style.borderColor='var(--border)';
+      b.style.boxShadow='';
+    });
+    btn.classList.add('active');
+    btn.style.background='var(--p2)';
+    btn.style.color='#fff';
+    btn.style.borderColor='var(--p2)';
+    btn.style.boxShadow='0 0 14px rgba(147,51,234,0.3)';
+  });
+});
+</script>
+</body>
+</html>
